@@ -12,8 +12,12 @@
 
 TBD
 
-## Introduction
+## What is this?
 
+This is a proposal for an API to allow programmers to regulate and control "non-top same-origin realms" 
+(also known as iframes, tabs, popups, etc) and how they shape up when being created within a certain application.
+
+It's better to explain 
 
 
 ---------
