@@ -119,6 +119,7 @@ actually **prevents builders from designing and implementing resilient security*
 for JavaScript web apps. There are so much innovative efforts waiting to fulfil their potential
 and provide **robust security for the web**, failing to do so due to having **no control over this gap**.
 
+<!-- END OF DRAFT 
 ---------
 
 
@@ -239,3 +240,5 @@ Many thanks for valuable feedback and advice from:
 - [Person 1]
 - [Person 2]
 - [etc.]
+
+-->
