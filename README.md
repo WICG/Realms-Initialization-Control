@@ -23,7 +23,7 @@ to **any desired resolution** before loading any other internal/external JS code
 With that practice, apps can prevent certain operations, monitor them, virtualize them to behave differently for alternating purposes
 such as defending their application and more - **to a resultion current security APIs (e.g. CSP) do not offer.**
 
-## What's the problem then? That's what you have JavaScript for!
+## "What's the problem then? That's what you have JavaScript for!"
 
 While it's true this can (and should) be accomplished with JavaScript, with what the web can currently offer us,
 the code we create to express this practice **only applies to the context of the application itself.**
