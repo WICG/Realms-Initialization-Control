@@ -74,7 +74,46 @@ limitations, in an environment where they **cannot truly trust all the code they
 Did that last sentence sound absurd to you? Well, this is the **current landscape of 
 supply chain driven development** - and that's **not going to change anytime soon**.
 
+Because in reality, `alert-is-not-allowed.com` being a complex web app, would probably look more like this 
+(taken from https://edition.cnn.com/sport):
 
+![Screenshot 2023-12-07 at 17 43 42](https://github.com/weizman/Same-Origin-Regulation-Policy/assets/13243797/bb8d086c-6db2-4905-bda1-fd3f53e17b9a)
+
+A live DOM including an **endless list of scripts flying in from everywhere** 
+with an ability to constantly update **without asking for permission** whatsoever!
+
+So since `alert-is-not-allowed.com` have no control over what these scripts might do,
+its **only option** for disabling `alert` messages is by redefining their behaviour using JavaScript.
+
+## "Ok, well.. if JavaScript solves this, what's the problem then?"
+
+If only that was this simple. The problem is, JavaScript code can give birth to new contexts (aka realms)
+where each context has its own set of DOM, APIs, execution environment, and more (learn more about realms [here](https://weizmangal.com/2022/10/28/what-is-a-realm-in-js)).
+
+This means, that if one of those scripts `alert-is-not-allowed.com` includes decides to disobey the rules
+set by the app, they can **easily** do so by simply form a new realm, and use its `alert` instance instead of the
+one the app limited:
+
+```html
+  <script src="https://some-ad-service.com/ad-service.js">
+    let alert = window.alert;
+    if (alert.name === 'tamedAlert') {
+      const ifr = document.createElement('iframe'); // iframes introduce new realms
+      alert = document.body.appendChild(ifr).contentWindow.alert;
+    }
+    alert('I refuse to play by your rules - this shall successfully pop an alert message!');
+  </script>
+```
+
+And since browsers and the web currently offer no way to regulate that - 
+poor old `alert-is-not-allowed.com` is left **defenseless** against the might alert boxes.
+
+## "Enough with the drama, alert boxes aren't that big of a problem!"
+
+Fair enough. However, this was clearly just an example, and in reality this gap
+actually prevents builders from designing and implementing resilient security solutions 
+for JavaScript web apps. There are so much innovative efforts waiting to fulfil their potential
+and provide robust security for the web, failing to do so due to having no control over this gap.
 
 ---------
 
