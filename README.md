@@ -25,7 +25,7 @@ such as defending their application and more - **to a resultion current security
 
 ## "What's the problem then? That's what JavaScript's for!"
 
-While it's true this can (and should) be accomplished with JavaScript, with what the web can currently offers us,
+While it's true this can (and should) be accomplished with JavaScript, with what the web can currently offer us,
 the code we create to express this practice **only applies to the context of the application itself.**
 
 So in a scenario where an iframe is loaded into the application in its same origin, our code **won't run
