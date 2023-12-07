@@ -28,11 +28,11 @@ such as defending their application and more - **to a resultion current security
 While it's true this can (and should) be accomplished with JavaScript, with what the web can currently offer us,
 the code we create to express this practice **only applies to the context of the application itself.**
 
-So in a scenario where an iframe is loaded into the application in its same origin, our code won't run
-in the context of the iframe automatically the same way it did at the top level context.
+So in a scenario where an iframe is loaded into the application in its same origin, our code **won't run
+in the context of the iframe** automatically the same way it did at the top level context.
 
-_This_ is the problem we wish to propose a solution for - we want the code we create for shaping
-what the app can or can't do to apply automatically to all potential contexts of the application (so this practice is actually useful!).
+**_This_** is the problem we wish to propose a solution for - we want the code we create for shaping
+what the app can or can't do to **apply automatically to all potential contexts of the application** (so this practice is actually useful!).
 
 Best explain with an example. Consider the following application, `no-popups-allows.com`:
 
