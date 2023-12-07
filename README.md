@@ -110,6 +110,10 @@ poor old `alert-is-not-allowed.com` is left **defenseless** against the might al
 
 ## "Enough with the drama, alert boxes aren't that big of a problem!"
 
+Or in other words:
+
+> _"Who cares about all that?"_
+
 Fair enough. However, this was clearly just an example, and in reality this gap
 actually **prevents builders from designing and implementing resilient security** solutions 
 for JavaScript web apps. There are so much innovative efforts waiting to fulfil their potential
