@@ -14,11 +14,42 @@ TBD
 
 ## What is this?
 
-This is a proposal for an API to allow programmers to regulate and control "non-top same-origin realms" 
-(also known as iframes, tabs, popups, etc) and how they shape up when being created within a certain application.
+This is a proposal for an API serving a **security** need to allow programmers to regulate and control "non-top same-origin realms" 
+(also known as iframes, tabs, popups, etc) in terms of how they shape up when being created within a certain application.
 
-It's better to explain 
+The most basic premise for this proposal is that an application should have the **privilage** to fully configure its environment
+to **any desired resolution** before loading any other internal/external JS code - **for whatever reason**.
 
+With that practice, apps can prevent certain operations, monitor them, virtualize them to behave differently for alternating purposes
+such as defending their application and more.
+
+## What's the problem then? That's what you have JavaScript for!
+
+While it's true this can (and should) be accomplished with JavaScript, this 
+
+Best explain with an example. Consider the following application, `no-popups-allows.com`:
+
+```html
+<html>
+  <head>
+    <title> no-popups-allows.com </title>
+    <script>
+      window.alert = function tamedAlert(m) {
+        console.log(
+          'NOTICE:',
+          'alert messages are not welcome here, as we find them offensive!',
+          'for your convenience, we log the message to console instead of alerting it:', m
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <h1> Welcome to <u> no-popups-allows.com </u> - where popups are not allowed! </h1>
+  </body>
+</html>
+```
+
+`no-popups-allows.com` hates popups
 
 ---------
 
