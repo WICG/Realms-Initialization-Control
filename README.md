@@ -15,7 +15,7 @@ TBD
 ## "What's Same Origin Regulation Policy?"
 
 This is a proposal for some API serving a **security** need to allow programmers to regulate and control "non-top same-origin realms" 
-(also known as iframes, tabs, popups, etc) in terms of how they shape up when being created within a certain application.
+(also known as iframes, tabs, windows, etc) in terms of how they shape up when being created within a certain application.
 
 The most basic premise for this proposal is that an application should have the **privilage** to fully configure its environment
 to **any desired resolution** before loading any other internal/external JS code - **for whatever reason**.
@@ -34,12 +34,14 @@ in the context of the iframe** automatically the same way it did at the top leve
 **_This_** is the problem we wish to propose a solution for - we want the code we create for shaping
 what the app can or can't do to **apply automatically to all potential contexts of the application** (so this practice is actually useful!).
 
-Best explain with an example. Consider the following application, `no-popups-allows.com`:
+## "Not sure we understand..."
+
+Fair enough. Best explain with an example. Consider the following application, `alert-is-not-allowed.com`:
 
 ```html
 <html>
   <head>
-    <title> no-popups-allows.com </title>
+    <title> alert-is-not-allowed.com </title>
     <script>
       window.alert = function tamedAlert(m) {
         console.log(
@@ -51,12 +53,28 @@ Best explain with an example. Consider the following application, `no-popups-all
     </script>
   </head>
   <body>
-    <h1> Welcome to <u> no-popups-allows.com </u> - where popups are not allowed! </h1>
+    <h1> Welcome to <u> alert-is-not-allowed.com </u> - where alerts are not allowed! </h1>
   </body>
 </html>
 ```
 
-`no-popups-allows.com` hates popups
+`alert-is-not-allowed.com` hate alert messages, so they have their own app where they use JavaScript
+to express their decision to forbid alert messages in the page.
+
+A fair question would be: 
+
+> "_But why do they need to disable it using JavaScript? Can't they just not use it?_"
+
+Ideally, that would be true. But in reality, web apps are mainly composed by a lot of **code they 
+don't actually write, control or even aware of!**
+
+It is only justified that `alert-is-not-allowed.com` will use code to express their desired
+limitations, in an environment where they **cannot truly trust all the code they ship.**
+
+Did that last sentence sound absurd to you? Well, this is the **current landscape of 
+supply chain driven development** - and that's **not going to change anytime soon**.
+
+
 
 ---------
 
