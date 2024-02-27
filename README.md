@@ -20,7 +20,7 @@ document.body.appendChild(iframe);
 // code by app - redefine fetch API to not allow leakage of PII
 const realFetch = window.fetch;
 window.fetch = function(resource, options) {
-  if (containsPII(resource, options) {
+  if (containsPII(resource, options)) {
     throw new Error(`fetch to "${resource}" is blocked for containing sensitive PII!`);
   }
   return realFetch.call(this, resource, options);
