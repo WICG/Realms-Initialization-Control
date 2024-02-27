@@ -1,4 +1,4 @@
-# R.I.C.A
+# RICA
 
 > _**R**ealms **I**nitialization **C**ontrol **A**PI proposal (to introduce **security** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
@@ -14,7 +14,7 @@ iframe.onload = () => iframe.style.display = 'block';
 document.body.appendChild(iframe);
 ```
 
-RICA attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanizms the app might wish to dictate - for example:
+**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanizms the app might wish to dictate - for example:
 
 ```javascript
 // code by app - redefine fetch API to not allow leakage of PII
