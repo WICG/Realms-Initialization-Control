@@ -32,7 +32,7 @@ try {
   fetch(url);
 } catch (err) {
   const realm = document.body.appendChild(document.createElement('iframe')).contentWindow;
-  realm.fetch(url);
+  realm.fetch(url); // bypass is successful
 }
 ```
 
