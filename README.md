@@ -30,6 +30,7 @@ document.body.appendChild(iframe);
 * [Example](#Example)
 * [Problem](#Problem)
 * [Solution](#Solution)
+* [Goals](#Goals)
 * [Proposal](#Proposal)
 * [Importance](#Importance)
 * [Q&A](#QA)
@@ -161,6 +162,14 @@ Race condition scenarios in iframes are probably the best example - successfuly 
 But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcment so resilient.
 
 This is why we wish the harnest the power the browser has in order to tackle this problem, as it's clear it can (in contrary to user-land JavaScript code)
+
+## Goals
+
+Before explaining how we believe the browser can help us address this problem, it's important to focus on what are the goals of this proposal:
+
+* Give web apps control over all realms that fall under their origin - such realms can affect the app, and by being inferiour to the app it only makes sense the app gets the power to tell what they can or can't do.
+* Make this an opt-in API - there's no reason this should be a breaking change, this is a security optional enhancment.
+* Allow apps to easily endow this power to other first/third party entities if it wishes - to allow security vendors specializing in crafting runtime security mechanizms to help shipping security to the app.
 
 ## Proposal
 
