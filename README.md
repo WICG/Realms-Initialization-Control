@@ -32,6 +32,7 @@ document.body.appendChild(iframe);
   * [Realm](#Realm)
   * [Same Origin Realms](#Same-Origin-Realm)
   * [Cross Origin Realms](#Cross-Origin-Realm)
+* [Resources](#Resources)
 
 ## Motivation
 
@@ -238,3 +239,10 @@ In the browser ecosystem, [realms](#Realm) are associated with an origin. For ex
 ### Cross Origin Realm
 
 The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross origin realm to realm B, and vice versa.
+
+## Resources
+
+* Gathered information on realms security - https://github.com/weizman/awesome-javascript-realms-security
+* "The Same Origin Concern" - https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf
+* "JavaScript realms used to bypass and eliminate web apps security tools - A problem with a WIP solution" (presented to W3C) - https://www.w3.org/2023/03/secure-the-web-forward/talks/realms.html
+* Snow JS ❄️ - https://github.com/lavamoat/snow
