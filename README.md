@@ -61,7 +61,7 @@ The downside is pretty big though: by including such services in my application,
 
 This jeopardizes the safety of my application - which translates into putting my users at risk.
 
-Fortunately, this naturally encourged the creation of security tools to be similarly included in web application to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
+Fortunately, this naturally encourged the creation of security tools to be similarly included in web applications to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
 
 Therefore, I choose to integrate `monitor.js` - a JavaScript runtime security tool for enhancing the security of my app by blocking exfiltration of sensitive PII data:
 
@@ -168,7 +168,7 @@ Headers: {
 }
 ```
 
-Problem solved - now, the security logic introduced by `monitor.js` will be applied automatically by the browser to all same origin realms that can be manipulated against the execution environment of the app (as ooposed to before where its logic only applied to the main realm of the app).
+Problem solved - now, the security logic introduced by `monitor.js` will be applied automatically by the browser to all same origin realms that can be manipulated against the execution environment of the app (as opposed to before where its logic only applied to the main realm of the app).
 
 ## Importance
 
