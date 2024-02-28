@@ -66,10 +66,11 @@ Fortunately, this naturally encourged the creation of security tools to be simil
 Therefore, I choose to integrate `monitor.js` - a JavaScript runtime security tool for enhancing the security of my app by blocking exfiltration of sensitive PII data:
 
 ```html
-<!-- https://ticket-king.com/ -->
-<title> Ticket King </title>
-<head>
-  <script src="https://security-for-web-apps.com/scripts/monitor.js"></script>
+<html>
+  <!-- https://ticket-king.com/ -->
+  <title> Ticket King </title>
+  <head>
+    <script src="https://security-for-web-apps.com/scripts/monitor.js"></script>
 ...
 ```
 
@@ -152,9 +153,10 @@ To help this click, lets put it all together by exploring how this fixes the gap
 All we need to do is change how our app loads `monitor.js` as follows:
 
 ```html
-<!-- https://ticket-king.com/ -->
-<title> Ticket King </title>
-<head>
+<html>
+  <!-- https://ticket-king.com/ -->
+  <title> Ticket King </title>
+  <head>
 ...
 ```
 
