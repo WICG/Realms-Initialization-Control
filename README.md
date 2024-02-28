@@ -22,7 +22,7 @@ document.body.appendChild(iframe);
 
 ## Participate
 
-- [Issue tracker](https://github.com/weizman/Same-Origin-Regulation-Policy/issues)
+- [Issue tracker](https://github.com/weizman/Realms-Initialization-Control-API/issues)
 
 ## Table of contents
  
