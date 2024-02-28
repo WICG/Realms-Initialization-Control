@@ -25,7 +25,7 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Importance](#Importance)
 * [Q&A](#Q&A)
-  * [Isn't this what `X-frames` and `frame-src` are for?]()
+  * [Isn't this what `X-frames` and `frame-src` are for?](#isnt-this-what-x-frames-and-frame-src-are-for)
 * [Terminology](#Terminology)
   * [Capabilities](#Capabilities)
   * [Virtualization](#Virtualization-(in-JavaScript))
