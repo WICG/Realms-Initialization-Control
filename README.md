@@ -1,4 +1,4 @@
-# RICA
+# RICA Proposal
 
 > _**R**ealms **I**nitialization **C**ontrol **A**PI proposal (to introduce **security** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
