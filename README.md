@@ -18,7 +18,17 @@ document.body.appendChild(iframe);
 
 ## Table of contents
  
-TBD
+* [Motivation](#Motivation)
+* [Example](#Example)
+* [Problem](#Problem)
+* [Solution](#Solution)
+* [Importance](#Importance)
+* [Terminology](#Terminology)
+ * [Capabilities](#Capabilities)
+ * [Virtualization](#Virtualization-(in-JavaScript))
+ * [Realm](#Realm)
+ * [Same Origin Realms](#Same-Origin-Realm)
+ * [Cross Origin Realms](#Cross-Origin-Realm)
 
 ## Motivation
 
@@ -172,7 +182,15 @@ Problem solved - now, the security logic introduced by `monitor.js` will be appl
 
 ## Importance
 
+This problem has been a pain for security vendors for years. 
 
+The web turns more and more complex, and telling good code from bad one becomes harder and harder. The incentive for security vendors to address this problem exists and the approach is continually explored and ivolving.
+
+However, among other things, the same origin concern is a major blocker in arriving at a resilient solution for runtime security for web applications.
+
+Because at the end of the day, attempting to protect apps is doomed to fail if attackers can just escape the protected environment and easily find powerful capabilities elsewhere to manipulate against the app.
+
+Until this is fixed, bringing runtime security for web apps in the browser isn't going to be very effective and therefore the web can benefit a lot from addressing this issue in sake of security.
 
 ## Terminology
 
