@@ -50,7 +50,7 @@ However, due to some characteristics of how the web is designed, there are some 
 
 One of them - the one we focus on in this proposal - is the lack of control web applications have over the initialization of same origin realms within their execution environment at runtime, due to how they naturally leak powerful capabilities without the app having the power to moderate them whatsoever.
 
-Best explained by an example.
+Best explained by an example (or to jump right into the [problem](#Problem) although discouraged).
 
 ## Example
 
