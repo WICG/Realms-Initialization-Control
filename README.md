@@ -22,7 +22,10 @@ document.body.appendChild(iframe);
 * [Example](#Example)
 * [Problem](#Problem)
 * [Solution](#Solution)
+* [Proposal](#Proposal)
 * [Importance](#Importance)
+* [Q&A](#Q&A)
+  * [Isn't this what `X-frames` and `frame-src` are for?]()
 * [Terminology](#Terminology)
   * [Capabilities](#Capabilities)
   * [Virtualization](#Virtualization-(in-JavaScript))
@@ -32,15 +35,19 @@ document.body.appendChild(iframe);
 
 ## Motivation
 
-The problem with [same origin realms](#Same-Origin-Realm) (also known as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf)) isn't intuitive to comprehend becase it comes into play only when trying to harnest the power of [virtualization in JavaScript](#Virtualization-(in-JavaScript)) in favor of providing advanced security to web apps, which isn't a common usage for JavaScript to begin with, as it primarily aimed at addressing security concerns.
+The problem with [same origin realms](#Same-Origin-Realm) (also known as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf)) isn't intuitive to comprehend becase it comes into play only when trying to harnest the power of [virtualization in JavaScript](#Virtualization-(in-JavaScript)) in favor of providing advanced security to web apps at runtime, which isn't a common usage for JavaScript to begin with, as it primarily aimed at addressing security concerns.
 
 However, we see the importance of such use cases - while JavaScript is a great language for creating composable software, it isn't designed well enough to do so securely, especially when adjusted to run in the browser and interact with the DOM.
 
-And since there is a clear rise in the need for easily composing web applications due to the increase in supply chain driven development, it is important to allow so.
+And since there is a clear rise in the need for easily composing web applications due to the increase in supply chain driven development, it is important we allow it to do so.
 
 Unfortuantly, securing a supply chain is inherently far harder than defending against good old XSS - while the latter is a rather straight forward lack of input sanitization, telling good code from bad code within the supply chain of an application is more abstract. That's why there are so many different angles to attempt to address this issue, whether at the application's runtime or its build time.
 
-One great way to approach this problem at runtime is by [virtualization](#Virtualization-(in-JavaScript)) - redefining JavaScript [capabilities](#Capabilities) at runtime (commonly known as [monkey patching](https://blog.openreplay.com/monkey-patching-in-javascript/)) to behave similarly while hardening their security to make an effort in telling bad code from good code.
+One important way to approach this problem at runtime is by [virtualization](#Virtualization-(in-JavaScript)) - redefining JavaScript [capabilities](#Capabilities) at runtime (commonly known as [monkey patching](https://blog.openreplay.com/monkey-patching-in-javascript/)) to behave similarly while hardening their security to make an effort in telling bad operations from good ones.
+
+However, due to some characteristics of how the web is designed, there are some major blockers in fully unleashing the power of [virtualization](#Virtualization-(in-JavaScript)) in favor of introducing security at runtime.
+
+One of them - the one we focus on in this proposal - is the lack of control web applications have over the initialization of same origin realms within their execution environment at runtime, due to how they naturally leak powerful capabilities without the app having the power to moderate them whatsoever.
 
 Best explained by an example.
 
@@ -134,6 +141,18 @@ In the context of the example - `monitor.js` can only redefine the `fetch` capab
 
 ## Solution
 
+This is a hard problem to solve. We have been working on a virtualized solution for this for a few years with the attempt of implementing this security layer in the "user land" (see [Snow JS ❄️](https://github.com/lavamoat/snow)).
+
+So far, it seems to be basically impossible to accomplish this in that way. Not only there are too many ways of creating same origin realms that can be manipulated against the main execution environment, but also some of those ways seem to be natively impossible to fix on the one hand, while on the other are already addressed natively by the browser.
+
+Race condition scenarios in iframes are probably the best example - successfuly fetching capabilities from a new realm seems to be possible before it's officially ready (when its `load` event is fired). This makes it so hard for defenders to protect new realm while so easy for attackers to take advatage of them using JavaScript. 
+
+But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcment so resilient.
+
+This is why we wish the harnest the power the browser has in order to tackle this problem, as it's clear it can (in contrary to user-land JavaScript code)
+
+## Proposal
+
 This proposal is about composing some API for the browsers to adopt and export for the usage of web applications to finally have real control over the initialization of same origin realms under their runtime environment.
 
 Such power should be opted into and transferable to other entities at runtime if desired.
@@ -191,6 +210,12 @@ However, among other things, the same origin concern is a major blocker in arriv
 Because at the end of the day, attempting to protect apps is doomed to fail if attackers can just escape the protected environment and easily find powerful capabilities elsewhere to manipulate against the app.
 
 Until this is fixed, bringing runtime security for web apps in the browser isn't going to be very effective and therefore the web can benefit a lot from addressing this issue in sake of security.
+
+## Q&A
+
+### Isn't this what `X-frames` and `frame-src` are for?
+
+Not quite. While those perform great in preventing certain remote resources from loading into/within `iframe`s, the problem described here is far more complicated because reaching into same origin realms can be done in many other ways that do not fall under `X-frames` and `frame-src` jurisdiction such creating an `about:blank` iframe, opening a new tab using `open` API and more.
 
 ## Terminology
 
