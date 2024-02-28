@@ -77,6 +77,8 @@ In other words, I don't need to build code that pulls and shows ads - someone al
 
 The downside is pretty big though: by including such services in my application, I effectively grant them full access to it, which can easily escalate into a security breach of my application, whether if by the maintainer of the code I include going evil or getting compromised into introducing malicious code by some other evil party.
 
+This is an important point to take into account when thinking about this proposal - the problem discussed here partly comes from how there's no responsible privilage distribution between different entities within a webpage - everyone has access to everything under one single origin. That goes for DOM access as well.
+
 This jeopardizes the safety of my application - which translates into putting my users at risk.
 
 Fortunately, this naturally encourged the creation of security tools to be similarly included in web applications to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
