@@ -24,11 +24,11 @@ document.body.appendChild(iframe);
 * [Solution](#Solution)
 * [Importance](#Importance)
 * [Terminology](#Terminology)
- * [Capabilities](#Capabilities)
- * [Virtualization](#Virtualization-(in-JavaScript))
- * [Realm](#Realm)
- * [Same Origin Realms](#Same-Origin-Realm)
- * [Cross Origin Realms](#Cross-Origin-Realm)
+  * [Capabilities](#Capabilities)
+  * [Virtualization](#Virtualization-(in-JavaScript))
+  * [Realm](#Realm)
+  * [Same Origin Realms](#Same-Origin-Realm)
+  * [Cross Origin Realms](#Cross-Origin-Realm)
 
 ## Motivation
 
