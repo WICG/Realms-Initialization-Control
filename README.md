@@ -65,6 +65,14 @@ Fortunately, this naturally encourged the creation of security tools to be simil
 
 Therefore, I choose to integrate `monitor.js` - a JavaScript runtime security tool for enhancing the security of my app by blocking exfiltration of sensitive PII data:
 
+```html
+<!-- https://ticket-king.com/ -->
+<title> Ticket King </title>
+<head>
+  <script src="https://security-for-web-apps.com/scripts/monitor.js"></script>
+...
+```
+
 ```javascript
 // monitor.js - redefine fetch API to block leakage of PII data:
 
@@ -97,9 +105,72 @@ try {
 
 And just like that - `monitor.js` is bypassed and remains absolutly useles. 
 
-It's important to understand - this isn't the fault of `monitor.js`. The web is just not designed to handle such a problem, it isn't part of the threat model.
+It's important to understand - this isn't the fault of `monitor.js`. The web is just not designed to handle such a problem, it isn't part of the threat model, and that's the part we need to address.
 
-~~~ we need rica
+## Problem
+
+If to encapsulate what's missing exactly in the example above, is how the app lacks privilages over formation of realms within its own origin.
+
+Web apps have power over their main execution environment which manifests in how they control which code runs first, thus they can adjust the execution environment as they like before hosting third party entities under it.
+
+From the browser threat model point of view, this is the expected behaviour - as the host, you are encourged to invtine guests into your kitchen to help you cook, but you get to decide what utensils to put out for them to use and where to hide the knife in case you don't trust them.
+
+Same goes for powerful capabilities - you might want third party entities to have access to those, but maybe redefine their behaviour so that you can monitor how they're being used and even block improper usage.
+
+But web apps can't do that - because forming new realms to steal fresh instances of these powerful capabilities from is too simple for attackers and too hard for defenders to prevent.
+
+In the context of the example - `monitor.js` can only redefine the `fetch` capability in the main execution environment of the app, but can't do so automatically to other execution enviroments in its jurisdiction (aka same origin realms).
+
+## Solution
+
+This proposal is about composing some API for the browsers to adopt and export for the usage of web applications to finally have real control over the initialization of same origin realms under their runtime environment.
+
+Such power should be opted into and transferable to other entities at runtime if desired.
+
+While it's more clear to us what's the power that's missing and which entities should have access to it, the technical part is still more debatable.
+
+That being said, after conducting some research, we believe CSP could be a great mechanizm for manifesting this proposal, mainly because CSP is already proven to be a very resilient mechanizm for canonically enforcing security policies to same origin realms.
+
+Imagine a new CSP directive called `rica` that accepts a list of JavaScript resources:
+
+```
+Headers: {
+  Content-Security-Policy: "rica: https://domain-i-trust.com/scripts/on-new-same-origin-realm.js"
+}
+```
+
+Once the browser sees the `rica` directive, it knows there is a script the web app requested to load everytime a same origin realm with synchronous access to the main execution environment of the app is formed.
+
+This might feel like a new mechanizm, but every component of this proposal leans on already existing mechanizms:
+
+* Configuring which script to run on every new same origin realm can be based on CSP;
+* Making the browser load those with every new same origin realms before any other code runs within it (whether dictated by its internal document or manipulated by the parent of the realm) can be based on the mechanizm that grants this exact power to browser extensions over web pages ("run_at": "document_start" - perhaps some version of a content script?);
+* Canonically enforcing this behaviour on all same origin realms safely can also be based on CSP.
+
+To help this click, lets put it all together by exploring how this fixes the gap left in the example from before.
+
+All we need to do is change how our app loads `monitor.js` as follows:
+
+```html
+<!-- https://ticket-king.com/ -->
+<title> Ticket King </title>
+<head>
+...
+```
+
+With the following header:
+
+```
+Headers: {
+  Content-Security-Policy: "rica: https://security-for-web-apps.com/scripts/monitor.js"
+}
+```
+
+Problem solved - now, the security logic introduced by `monitor.js` will be applied automatically by the browser to all same origin realms that can be manipulated against the execution environment of the app (as ooposed to before where its logic only applied to the main realm of the app).
+
+## Importance
+
+
 
 ## Terminology
 
