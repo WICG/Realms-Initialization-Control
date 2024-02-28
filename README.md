@@ -24,7 +24,7 @@ document.body.appendChild(iframe);
 * [Solution](#Solution)
 * [Proposal](#Proposal)
 * [Importance](#Importance)
-* [Q&A](#Q&A)
+* [Q&A](#QA)
   * [Isn't this what `X-frames` and `frame-src` are for?](#isnt-this-what-x-frames-and-frame-src-are-for)
 * [Terminology](#Terminology)
   * [Capabilities](#Capabilities)
