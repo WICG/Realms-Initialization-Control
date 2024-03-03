@@ -2,7 +2,7 @@
 
 > _**R**ealms **I**nitialization **C**ontrol **A**PI proposal (to introduce **security** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
-The **R**ealms **I**nitialization **C**ontrol **A**PI (refered to as **RICA**) should allow developers to securely tap into the creation moment of [same origin realms](#Same-Origin-Realm) within their web application in order to tame and control them.
+The **R**ealms **I**nitialization **C**ontrol **A**PI (referred to as **RICA**) should allow developers to securely tap into the creation moment of [same origin realms](#Same-Origin-Realm) within their web application in order to tame and control them.
 
 While from a **usability** point of view this is already natively provided by the platform by using `load` events of iframes for example:
 
@@ -14,7 +14,7 @@ iframe.onload = () => iframe.style.display = 'block';
 document.body.appendChild(iframe);
 ```
 
-**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanizms the app might wish to dictate.
+**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanisms the app might wish to dictate.
 
 ## Authors:
 
@@ -45,13 +45,13 @@ document.body.appendChild(iframe);
 
 ## Motivation
 
-The problem with [same origin realms](#Same-Origin-Realm) (also known as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf)) isn't intuitive to comprehend becase it comes into play only when trying to harnest the power of [virtualization in JavaScript](#Virtualization-(in-JavaScript)) in favor of providing advanced security to web apps at runtime, which isn't a common usage for JavaScript to begin with, as it primarily aimed at addressing security concerns.
+The problem with [same origin realms](#Same-Origin-Realm) (also known as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf)) isn't intuitive to comprehend because it comes into play only when trying to harness the power of [virtualization in JavaScript](#Virtualization-(in-JavaScript)) in favor of providing advanced security to web apps at runtime, which isn't a common usage for JavaScript to begin with, as it primarily aimed at addressing security concerns.
 
 However, we see the importance of such use cases - while JavaScript is a great language for creating composable software, it isn't designed well enough to do so securely, especially when adjusted to run in the browser and interact with the DOM.
 
 And since there is a clear rise in the need for easily composing web applications due to the increase in supply chain driven development, it is important we allow it to do so.
 
-Unfortuantly, securing a supply chain is inherently far harder than defending against good old XSS - while the latter is a rather straight forward lack of input sanitization, telling good code from bad code within the supply chain of an application is more abstract. That's why there are so many different angles to attempt to address this issue, whether at the application's runtime or its build time.
+Unfortunately, securing a supply chain is inherently far harder than defending against good old XSS - while the latter is a rather straight forward lack of input sanitization, telling good code from bad code within the supply chain of an application is more abstract. That's why there are so many angles to attempt to address this issue, whether at the application's runtime or its build time.
 
 One important way to approach this problem at runtime is by [virtualization](#Virtualization-(in-JavaScript)) - redefining JavaScript [capabilities](#Capabilities) at runtime (commonly known as [monkey patching](https://blog.openreplay.com/monkey-patching-in-javascript/)) to behave similarly while hardening their security to make an effort in telling bad operations from good ones.
 
@@ -63,13 +63,13 @@ Best explained by an example (or to jump right into the [problem](#Problem) alth
 
 ## Example
 
-I have a web app accessible online via `https://ticket-king.com/` where people can order tickets to music concertes.
+I have a web app accessible online via `https://ticket-king.com/` where people can order tickets to music concerts.
 
 Like most of the web, the client side of my app is rather complex, because building a fast and resilient app that allows people to purchase tickets online isn't an easy task.
 
 My app needs to have:
 
-- Great UI (which is both fast and built of composable componenets)
+- Great UI (which is both fast and built of composable components)
 - Great network communication layer (to easily communicate with my server)
 - Some layer for validating user input (name, email, etc)
 - Some component for actually accepting credit card information (for being able to charge the user for their purchase)
@@ -81,16 +81,16 @@ And the list goes on.
 
 Luckily, web apps are written in JavaScript, a great language for creating composable software. 
 
-This means I don't have to implement all of the above by myself - The JavaScript ecosystem is designed to encourge developers to answer such needs by creating software that exports the different functionalities I need.
+This means I don't have to implement all of the above by myself - The JavaScript ecosystem is designed to encourage developers to answer such needs by creating software that exports the different functionalities I need.
 In other words, I don't need to build code that pulls and shows ads - someone already did it for me. Same goes for input validation, monitoring services and basically for anything.
 
 The downside is pretty big though: by including such services in my application, I effectively grant them full access to it, which can easily escalate into a security breach of my application, whether if by the maintainer of the code I include going evil or getting compromised into introducing malicious code by some other evil party.
 
-This is an important point to take into account when thinking about this proposal - the problem discussed here partly comes from how there's no responsible privilage distribution between different entities within a webpage - everyone has access to everything under one single origin. That goes for DOM access as well.
+This is an important point to take into account when thinking about this proposal - the problem discussed here partly comes from how there's no responsible privilege distribution between different entities within a webpage - everyone has access to everything under one single origin. That goes for DOM access as well.
 
 This jeopardizes the safety of my application - which translates into putting my users at risk.
 
-Fortunately, this naturally encourged the creation of security tools to be similarly included in web applications to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
+Fortunately, this naturally encouraged the creation of security tools to be similarly included in web applications to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
 
 Therefore, I choose to integrate `monitor.js` - a JavaScript runtime security tool for enhancing the security of my app by blocking exfiltration of sensitive PII data:
 
@@ -133,23 +133,23 @@ try {
 }
 ```
 
-And just like that - `monitor.js` is bypassed and remains absolutly useles. 
+And just like that - `monitor.js` is bypassed and remains absolutely useless. 
 
 It's important to understand - this isn't the fault of `monitor.js`. The web is just not designed to handle such a problem, it isn't part of the threat model, and that's the part we need to address.
 
 ## Problem
 
-If to encapsulate what's missing exactly in the example above, is how the app lacks privilages over formation of realms within its own origin.
+If to encapsulate what's missing exactly in the example above, is how the app lacks privileges over formation of realms within its own origin.
 
 Web apps have power over their main execution environment which manifests in how they control which code runs first, thus they can adjust the execution environment as they like before hosting third party entities under it.
 
-From the browser threat model point of view, this is the expected behaviour - as the host, you are encourged to invtine guests into your kitchen to help you cook, but you get to decide what utensils to put out for them to use and where to hide the knife in case you don't trust them.
+From the browser threat model point of view, this is the expected behaviour - as the host, you are encouraged to invite guests into your kitchen to help you cook, but you get to decide what utensils to put out for them to use and where to hide the knife in case you don't trust them.
 
 Same goes for powerful capabilities - you might want third party entities to have access to those, but maybe redefine their behaviour so that you can monitor how they're being used and even block improper usage.
 
 But web apps can't do that - because forming new realms to steal fresh instances of these powerful capabilities from is too simple for attackers and too hard for defenders to prevent.
 
-In the context of the example - `monitor.js` can only redefine the `fetch` capability in the main execution environment of the app, but can't do so automatically to other execution enviroments in its jurisdiction (aka same origin realms).
+In the context of the example - `monitor.js` can only redefine the `fetch` capability in the main execution environment of the app, but can't do so automatically to other execution environments in its jurisdiction (aka same origin realms).
 
 ## Solution
 
@@ -157,19 +157,19 @@ This is a hard problem to solve. We have been working on a virtualized solution 
 
 So far, it seems to be basically impossible to accomplish this in that way. Not only there are too many ways of creating same origin realms that can be manipulated against the main execution environment, but also some of those ways seem to be natively impossible to fix on the one hand, while on the other are already addressed natively by the browser.
 
-Race condition scenarios in iframes are probably the best example - successfuly fetching capabilities from a new realm seems to be possible before it's officially ready (when its `load` event is fired). This makes it so hard for defenders to protect new realm while so easy for attackers to take advatage of them using JavaScript. 
+Race condition scenarios in iframes are probably the best example - successfully fetching capabilities from a new realm seems to be possible before it's officially ready (when its `load` event is fired). This makes it so hard for defenders to protect new realm while so easy for attackers to take advantage of them using JavaScript. 
 
-But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcment so resilient.
+But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcement so resilient.
 
-This is why we wish the harnest the power the browser has in order to tackle this problem, as it's clear it can (in contrary to user-land JavaScript code)
+This is why we wish the harness the power the browser has in order to tackle this problem, as it's clear it can (in contrary to user-land JavaScript code)
 
 ## Goals
 
 Before explaining how we believe the browser can help us address this problem, it's important to focus on what are the goals of this proposal:
 
-* Give web apps control over all realms that fall under their origin - such realms can affect the app, and by being inferiour to the app it only makes sense the app gets the power to tell what they can or can't do.
-* Make this an opt-in API - there's no reason this should be a breaking change, this is a security optional enhancment.
-* Allow apps to easily endow this power to other first/third party entities if it wishes - to allow security vendors specializing in crafting runtime security mechanizms to help shipping security to the app.
+* Give web apps control over all realms that fall under their origin - such realms can affect the app, and by being inferior to the app it only makes sense the app gets the power to tell what they can or can't do.
+* Make this an opt-in API - there's no reason this should be a breaking change, this is a security optional enhancement.
+* Allow apps to easily endow this power to other first/third party entities if it wishes - to allow security vendors specializing in crafting runtime security mechanisms to help shipping security to the app.
 
 ## Proposal
 
@@ -177,9 +177,9 @@ This proposal is about composing some API for the browsers to adopt and export f
 
 Such power should be opted into and transferable to other entities at runtime if desired.
 
-While it's more clear to us what's the power that's missing and which entities should have access to it, the technical part is still more debatable.
+While it is clearer to us what's the power that's missing and which entities should have access to it, the technical part is still more debatable.
 
-That being said, after conducting some research, we believe CSP could be a great mechanizm for manifesting this proposal, mainly because CSP is already proven to be a very resilient mechanizm for canonically enforcing security policies to same origin realms.
+That being said, after conducting some research, we believe CSP could be a great mechanism for manifesting this proposal, mainly because CSP is already proven to be a very resilient mechanism for canonically enforcing security policies to same origin realms.
 
 Imagine a new CSP directive called `rica` that accepts a list of JavaScript resources:
 
@@ -191,10 +191,10 @@ Headers: {
 
 Once the browser sees the `rica` directive, it knows there is a script the web app requested to load everytime a same origin realm with synchronous access to the main execution environment of the app is formed.
 
-This might feel like a new mechanizm, but every component of this proposal leans on already existing mechanizms:
+This might feel like a new mechanism, but every component of this proposal leans on already existing mechanisms:
 
 * Configuring which script to run on every new same origin realm can be based on CSP;
-* Making the browser load those with every new same origin realms before any other code runs within it (whether dictated by its internal document or manipulated by the parent of the realm) can be based on the mechanizm that grants this exact power to browser extensions over web pages ("run_at": "document_start" - perhaps some version of a content script?);
+* Making the browser load those with every new same origin realms before any other code runs within it (whether dictated by its internal document or manipulated by the parent of the realm) can be based on the mechanism that grants this exact power to browser extensions over web pages ("run_at": "document_start" - perhaps some version of a content script?);
 * Canonically enforcing this behaviour on all same origin realms safely can also be based on CSP.
 
 To help this click, lets put it all together by exploring how this fixes the gap left in the example from before.
@@ -223,7 +223,7 @@ Problem solved - now, the security logic introduced by `monitor.js` will be appl
 
 This problem has been a pain for security vendors for years. 
 
-The web turns more and more complex, and telling good code from bad one becomes harder and harder. The incentive for security vendors to address this problem exists and the approach is continually explored and ivolving.
+The web turns more and more complex, and telling good code from bad one becomes harder and harder. The incentive for security vendors to address this problem exists and the approach is continually explored and evolving.
 
 However, among other things, the same origin concern is a major blocker in arriving at a resilient solution for runtime security for web applications.
 
@@ -257,7 +257,7 @@ In the browser ecosystem, [realms](#Realm) are associated with an origin. For ex
 
 ### Cross Origin Realm
 
-The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross origin realm to realm B, and vice versa.
+The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross-origin realm to realm B, and vice versa.
 
 ## Resources
 
