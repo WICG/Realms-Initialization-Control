@@ -14,7 +14,7 @@ iframe.onload = () => iframe.style.display = 'block';
 document.body.appendChild(iframe);
 ```
 
-**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how [same origin realms](#Same-Origin-Realm) can be manipulated against security mechanisms the app might wish to dictate.
+**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how they can be manipulated against security mechanisms the app might wish to dictate.
 
 ## Authors:
 
