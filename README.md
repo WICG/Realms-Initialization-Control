@@ -177,7 +177,7 @@ Race condition scenarios in iframes are probably the best example - successfully
 
 ![Screenshot 2024-03-03 at 11 06 18](https://github.com/weizman/Realms-Initialization-Control-API/assets/13243797/5fd96798-2442-4b6e-9be8-391ecca042f1)
 
-This makes it so hard for defenders to protect new realm while so easy for attackers to take advantage of them using JavaScript. 
+This makes it so hard for defenders to protect new realms while so easy for attackers to take advantage of them using JavaScript. 
 
 But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcement so resilient.
 
