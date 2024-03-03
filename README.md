@@ -41,7 +41,7 @@ document.body.appendChild(iframe);
 
 The problem with [same origin realms](#Same-Origin-Realm) (also known as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf)) isn't intuitive to comprehend because it comes into play only when trying to harness the power of [virtualization in JavaScript](#Virtualization-(in-JavaScript)) in favor of providing advanced security to web apps at runtime, which isn't a common usage for JavaScript to begin with, as it primarily aimed at addressing security concerns.
 
-However, we see the importance of such use cases - while JavaScript is a great language for creating composable software, it isn't designed well enough to do so securely, especially when adjusted to run in the browser and interact with the DOM.
+That being said, we see the importance of such use cases - while JavaScript is a great language for creating composable software, it isn't designed well enough to do so securely, especially when adjusted to run in the browser and interact with the DOM.
 
 And since there is a clear rise in the need for easily composing web applications due to the increase in supply chain driven development, it is important we allow it to do so.
 
