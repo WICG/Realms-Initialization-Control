@@ -16,13 +16,7 @@ document.body.appendChild(iframe);
 
 **RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly different, because of how they can be manipulated against security mechanisms the app might wish to dictate.
 
-## Authors:
-
-- [Gal Weizman](https://github.com/weizman)
-
-## Participate
-
-- [Issue tracker](https://github.com/weizman/Realms-Initialization-Control-API/issues)
+> _Authored by [Gal Weizman](https://github.com/weizman) ([participate here](https://github.com/weizman/Realms-Initialization-Control-API/issues))_
 
 ## Table of contents
  
