@@ -173,7 +173,11 @@ This is a hard problem to solve. We have been working on a virtualized solution 
 
 So far, it seems to be basically impossible to accomplish this in that way. Not only there are too many ways of creating same origin realms that can be manipulated against the main execution environment, but also some of those ways seem to be natively impossible to fix on the one hand, while on the other are already addressed natively by the browser.
 
-Race condition scenarios in iframes are probably the best example - successfully fetching capabilities from a new realm seems to be possible before it's officially ready (when its `load` event is fired). This makes it so hard for defenders to protect new realm while so easy for attackers to take advantage of them using JavaScript. 
+Race condition scenarios in iframes are probably the best example - successfully fetching capabilities from a new realm seems to be possible before it's officially ready (when its `load` event is fired): 
+
+![Screenshot 2024-03-03 at 11 06 18](https://github.com/weizman/Realms-Initialization-Control-API/assets/13243797/5fd96798-2442-4b6e-9be8-391ecca042f1)
+
+This makes it so hard for defenders to protect new realm while so easy for attackers to take advantage of them using JavaScript. 
 
 But for the browser, enforcing rules on new realms before any other user-land entity is simple and is already implemented - that's what makes CSP canonical enforcement so resilient.
 
