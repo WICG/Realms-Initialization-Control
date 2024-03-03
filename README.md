@@ -27,7 +27,7 @@ document.body.appendChild(iframe);
 * Therefore, we should identify the gaps in how the web is currently designed that set us back from achieving so and address those.
 * This proposal focuses on one of those gaps being the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf).
 * This refers to how [same origin realms](#Same-Origin-Realm) leak powerful [capabilities](#Capabilities) to unauthorized entities at runtime in an uncontrollable way. 
-* By attempting to propose some new API for browsers to hopefully adopt, we wish to allow web apps to tame and control such same origin realms to have actual control over their execution environment as opposed to current state.
+* By attempting to propose some new API for browsers to hopefully adopt, we wish to allow web apps to tame and control such same origin realms to have a true say over their execution environment as opposed to current state.
 
 ## Table of contents
  
