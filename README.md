@@ -18,6 +18,17 @@ document.body.appendChild(iframe);
 
 > _Authored by [Gal Weizman](https://github.com/weizman) ([participate here](https://github.com/weizman/Realms-Initialization-Control-API/issues))_
 
+## TL;DR
+
+* The evolution of how web apps are being composed is growing towards leaning on code written by others instead of doing so ourselves.
+* While great in terms of efficiency, integration of code that apps do not know nor control naturally introduces security risks that are complicated to solve.
+* No matter how great JavaScript is for easily composing software out of smaller blocks of software, not being able to do so securely will prevent this positive trend from scaling.
+* To safely scale software composability driven development, at first step we have to be able to [virtualize](#Virtualization-(in-JavaScript)) web environments at runtime to harden their security and prevent unauthorized entities from accessing [capabilities](#Capabilities) they should not have access to.
+* Therefore, we should identify the gaps in how the web is currently designed that set us back from achieving so and address those.
+* This proposal focuses on one of those gaps being the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf).
+* This refers to how [same origin realms](#Same-Origin-Realm) leak powerful [capabilities](#Capabilities) to unauthorized entities at runtime in an uncontrollable way. 
+* By attempting to propose some new API for browsers to hopefully adopt, we wish to allow web apps to tame and control such same origin realms to have actual control over their execution environment as opposed to current state.
+
 ## Table of contents
  
 * [Motivation](#Motivation)
