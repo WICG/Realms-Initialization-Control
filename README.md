@@ -1,6 +1,6 @@
 # RICA Proposal
 
-> TODO: things defined as CSP directives are not commonly referred to as API. How about just RIC or RID D=directive ?
+> // TODO: things defined as CSP directives are not commonly referred to as API. How about just RIC or RID D=directive ?
 
 > _**R**ealms **I**nitialization **C**ontrol **A**PI proposal (to introduce **security controls** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
@@ -40,7 +40,7 @@ Introducing a new CSP directive that sets a script to run at the start of each n
 
 ## Table of contents
 
-> TODO: regenerate
+> // TODO: regenerate
 
 ## Motivation
 
@@ -153,9 +153,7 @@ The proposed method for setting the script is a Content Security Policy directiv
 ```
 Content-Security-Policy: "new-realm: /scripts/on-new-same-origin-realm.js"
 ```
-> TODO: add more alternatives or decide on one and remove this:
-
-Directive names choices include: new-realm, realm-init,
+> // TODO: new-realm? realm-init? other?
 
 ## Example
 
@@ -202,7 +200,7 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-todo
+> // TODO: this is a good place to have some use cases to both (1) give a proper example that really makes sense and isn't merely "demonstratable" and (2) point out real use cases which is a good opportunity to point out advocating entities other than ourselves
 
 ## Discussion
 
@@ -214,13 +212,13 @@ The proposed mechanism mostly relies on functionality already present elsewhere 
 * Setting the script is being done via CSP, which is an excellent mechanism for canonically enforcing rules to a certain origin.
 * Supplying a script path the browser would remember across page loads exists in service worker implementation.
 
-### Script URL change
+### Canonicality
 
-This proposal assumes when the CSP directive changes value from location A to location B the change should be effective immediately with the first occurrence of the CSP header with location B provided and each new realm would use the new script location. One script location is defined per domain.
-The consequences of that seem desirable.
-Alternatives include:
-- Top level (the main window that's the opener of others) CSP defines the script location and it remains in effect until the application is reloaded.
-- Scopes can be defined, similarly to how service-workers are specified.
+The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
+
+Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
+
+This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
 
 ### Comparison with `X-frames` and `frame-src`
 
