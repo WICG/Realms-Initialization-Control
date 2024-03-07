@@ -134,6 +134,10 @@ Race condition in iframe initialization is one example of this - successfully re
 
 ![Screenshot 2024-03-03 at 11 06 18](https://github.com/weizman/Realms-Initialization-Control-API/assets/13243797/5fd96798-2442-4b6e-9be8-391ecca042f1)
 
+#### More
+
+Other downsides such as performance, compatibility and continuous resilience of such a solution are more important reasons for why achieving this in the user land is far from ideal.
+
 ## Goals
 
 * Give web applications control over all realms that fall under their origin - regardless of the APIs used to create the new realm and edge-cases like `about:blank`.
