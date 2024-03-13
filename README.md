@@ -162,9 +162,8 @@ The location of the script can be relative or absolute. Secure connection is req
 The proposed method for setting the script is a Content Security Policy directive as follows:
 
 ```
-Content-Security-Policy: "new-realm: /scripts/on-new-same-origin-realm.js"
+Content-Security-Policy: "realm-init: /scripts/on-new-same-origin-realm.js"
 ```
-> // TODO: new-realm? realm-init? other?
 
 ## Example
 
@@ -176,7 +175,7 @@ Prevent network requests revealing Personally Identifiable Information (the feas
 
 ```html
 Content-Type: text/html
-Content-Security-Policy: default-src 'self'; connect-src *; new-realm: /scripts/monitor.js
+Content-Security-Policy: default-src 'self'; connect-src *; realm-init: /scripts/monitor.js
 
 <html>
   <title> Ticket King - Checkout </title>
