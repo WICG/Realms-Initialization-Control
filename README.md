@@ -101,7 +101,7 @@ Snow expects a callback, which it'll fire immediately with every new realm that 
 
 In the context of the former example, this allows security tools to not worry about the same origin concern, and thus continue to focus on building their security mechanisms instead.
 
-So by asking Snow to execute to mitigation logic from earlier:
+So by asking Snow to execute the mitigation logic from earlier:
 
 ```javascript
 /* security tool same protection mechanism, but this time with Snow */
@@ -109,7 +109,7 @@ So by asking Snow to execute to mitigation logic from earlier:
 SNOW(realm => mitigate(realm))
 ```
 
-Snow makes sure to detect same origin realms creation, and by tapping into them, to also run the logic on them immediately and thus easily canceling the impact of the same origin concern: 
+Snow makes sure to detect same origin realms creation, and by tapping into them, to also run the logic on them immediately and thus to easily cancel the impact of the same origin concern: 
 
 ```javascript
 /* attacker same bypass won't work this time */ 
@@ -120,15 +120,15 @@ const newFetchInstance = stealFetch()
 
 ### Limitations
 
-Unfortunately, this taught us implementing such a user-land solution comes with some fundamental flaws:
+Unfortunately, implementing a user-land solution comes with some fundamental flaws:
 
 #### Scalability
 
-Surprisingly, there are too many ways to create same origin realms, and the list keeps on growing as the web evolves. Constantly chasing all the different ways of forming a new realm and attempting to patch them doesn't scale. 
+There are too many ways to create same origin realms, and the list keeps on growing as the web evolves. Constantly chasing all the different ways of forming a new realm and attempting to patch them doesn't scale. 
 
 #### Hermeticity
 
-Even when focusing on the ways we are aware of, it became clear that some of them are simply unaddressable in user-land. Building a bulletproof virtualized solution seems to be impossible.
+Some of those ways are unaddressable in user-land. Building a bulletproof virtualized solution seems to be impossible.
 
 Race condition in iframe initialization is one example of this - successfully reaching capabilities from a new realm is possible before its `load` event is emitted and reliably determining the earliest moment it becomes available is not feasible:
 
