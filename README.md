@@ -40,7 +40,16 @@ Introducing a new CSP directive that sets a script to run at the start of each n
 
 ## Table of contents
 
-> // TODO: regenerate
+* [Motivation](#Motivation)
+  * [Prior art](#Prior-art)
+  * [Limitations](#Limitations)
+* [Goals](#Goals)
+* [Proposal](#Proposal)
+* [Example](#Example)
+* [Use Cases](#Use-Cases)
+* [Discussion](#Discussion)
+* [Terminology](#Terminology)
+* [Resources](#Resources)
 
 ## Motivation
 
