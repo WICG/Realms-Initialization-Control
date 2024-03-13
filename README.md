@@ -22,6 +22,20 @@ document.body.appendChild(iframe);
 > _Authored by [Gal Weizman](https://github.com/weizman) , [Zbigniew Tenerowicz
 ](https://github.com/naugtur) ([participate here](https://github.com/weizman/Realms-Initialization-Control-API/issues))_
 
+## Table of contents
+
+* [Abstract](#Abstract)
+* [Motivation](#Motivation)
+    * [Prior art](#Prior-art)
+    * [Limitations](#Limitations)
+* [Goals](#Goals)
+* [Proposal](#Proposal)
+* [Example](#Example)
+* [Use Cases](#Use-Cases)
+* [Discussion](#Discussion)
+* [Terminology](#Terminology)
+* [Resources](#Resources)
+
 ## Abstract
 
 The evolution of how web applications are being composed is moving towards leaning on code written by other parties more. 
@@ -36,20 +50,7 @@ While software providing various runtime protections focused on addressing this 
 This lack of control is also referred to as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf) which is what this proposal focuses on addressing.
 It refers to how [same origin realms](#Same-Origin-Realm) leak powerful [capabilities](#Capabilities) to unauthorized entities at runtime in a fundamentally uncontrollable way.  
 
-Introducing a new CSP directive that sets a script to run at the start of each new realm in the application's origin would solve this by allowing web applications to capture same origin realms when initialized to customize them into mitigating the risk they expose the app to. 
-
-## Table of contents
-
-* [Motivation](#Motivation)
-  * [Prior art](#Prior-art)
-  * [Limitations](#Limitations)
-* [Goals](#Goals)
-* [Proposal](#Proposal)
-* [Example](#Example)
-* [Use Cases](#Use-Cases)
-* [Discussion](#Discussion)
-* [Terminology](#Terminology)
-* [Resources](#Resources)
+Introducing a new CSP directive that sets a script to run at the start of each new realm in the application's origin would solve this by allowing web applications to capture same origin realms when initialized to customize them into mitigating the risk they expose the app to.
 
 ## Motivation
 
