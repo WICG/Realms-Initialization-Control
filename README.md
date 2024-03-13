@@ -182,14 +182,19 @@ Content-Security-Policy: default-src 'self'; connect-src *; new-realm: /scripts/
 ```javascript
 /* monitor.js - redefine fetch API to block leakage of PII data */
 
-const realFetch = window.fetch
-
-window.fetch = function(resource, options) {
-  if (containsPII(resource, options)) {
-    throw new Error(`fetch "${resource}" is blocked for containing sensitive PII!`)
-  }
-  return realFetch.call(this, resource, options)
+function mitigate(realm) {
+    const realFetch = window.fetch
+    Object.defineProperty(realm, 'fetch', {
+        get: () => {
+            if (containsPII(resource, options)) {
+                throw new Error(`fetch "${resource}" is blocked for containing sensitive PII!`)
+            }
+            return realFetch.call(this, resource, options)
+        }
+    })
 }
+
+mitigate(window)
 ```
 
 As a result of the CSP directive pointing to `monitor.js`, the security logic introduced by it will be applied to all same origin realms that can be manipulated against the execution environment of the application (as opposed to allowing scripts to create a new realm and use its clean copy of fetch).
