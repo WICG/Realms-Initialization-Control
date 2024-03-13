@@ -1,11 +1,8 @@
-# RICA Proposal
+# RICE Proposal
 
-> // TODO: things defined as CSP directives are not commonly referred to as API. How about just RIC or RID D=directive ?
+> _**R**ealms **I**nitialization **C**ontrol **E**nablement proposal (to introduce **security controls** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
-> _**R**ealms **I**nitialization **C**ontrol **A**PI proposal (to introduce **security controls** to [same origin realms](#Same-Origin-Realm) in web applications)_
-
-
-The **R**ealms **I**nitialization **C**ontrol **A**PI (referred to as **RICA**) allows developers to securely tap into the creation moment of [same origin realms](#Same-Origin-Realm) within their web application in order to tame and control them.
+The proposal for **R**ealms **I**nitialization **C**ontrol **E**nablement (referred to as **RICE**) allows developers to securely tap into the creation moment of [same origin realms](#Same-Origin-Realm) within their web application in order to tame and control them.
 
 While from a **usability** point of view this is already natively provided by the platform by using `load` events of iframes for example:
 
@@ -17,7 +14,7 @@ iframe.onload = () => iframe.style.display = 'block';
 document.body.appendChild(iframe);
 ```
 
-**RICA** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly differently, because of how they can be manipulated against security mechanisms the app might wish to dictate.
+**RICE** attempts to provide this from a **security** point of view, which requires addressing [same origin realms](#Same-Origin-Realm) initialization significantly differently, because of how they can be manipulated against security mechanisms the app might wish to dictate.
 
 > _Authored by [Gal Weizman](https://github.com/weizman) , [Zbigniew Tenerowicz
 ](https://github.com/naugtur) ([participate here](https://github.com/weizman/Realms-Initialization-Control-API/issues))_
