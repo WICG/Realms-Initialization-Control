@@ -1,4 +1,4 @@
-# RIC Proposal
+# RIC Proposal (Explainer)
 
 > _**R**ealms **I**nitialization **C**ontrol proposal (to introduce **security controls** to [same origin realms](#Same-Origin-Realm) in web applications)_
 
