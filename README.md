@@ -215,7 +215,7 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-Adding use cases is a WIP - if you find this proposal useful (or just want to explore some potential use cases), help by visiting [#4](https://github.com/weizman/Realms-Initialization-Control/issues/4) and share your use case to push this proposal forward!
+> *Adding use cases is a WIP - if you find this proposal useful (or just want to explore some potential use cases), help by visiting [#4](https://github.com/weizman/Realms-Initialization-Control/issues/4) and share your use case to push this proposal forward!*
 
 ## Discussion
 
