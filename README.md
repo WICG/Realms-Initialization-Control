@@ -31,6 +31,7 @@ document.body.appendChild(iframe);
 * [Use Cases](#Use-Cases)
 * [Value](#Value)
 * [Discussion](#Discussion)
+* [XXX](#XXX)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
 
@@ -321,6 +322,94 @@ And will execute the scripts in that order.
 ### Comparison with `X-frames` and `frame-src`
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
+
+## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
+
+> 01.  What information does this feature expose, and for what purposes?
+
+This feature allows a website to register JavaScript code to be executed within new realms that fall under its jurisdiction (same origin) before any other JavaScript code gets to run within them.
+Thus, the information it naturally exposes is regarding when a new same origin realm is introudced under the execution environment of the top realm of the website.
+
+> 02.  Do features in your specification expose the minimum amount of information necessary to implement the intended functionality?
+
+Yes, I believe so - no further information is being provided to the website other than what's described under Q#1
+
+> 03.  Do the features in your specification expose personal information, personally-identifiable information (PII), or information derived from either?
+
+No
+
+> 04.  How do the features in your specification deal with sensitive information?
+
+They have nothing to do with such information
+
+> 05.  Does data exposed by your specification carry related but distinct information that may not be obvious to users?
+
+The only distinct information that's being provided to the user that was not possible before is when same origin realms are introduced into the website's execution environment
+
+> 06.  Do the features in your specification introduce state that persists across browsing sessions?
+
+The only thing that might persist across browsing sessions is a new cached resource which is the remote JavaScript file that's being dictated to be fetched and executed by the new proposed CSP directive in the proposal
+
+> 07.  Do the features in your specification expose information about the underlying platform to origins?
+
+No
+
+> 08.  Does this specification allow an origin to send data to the underlying platform?
+
+The only data that's being sent to the underlying platform is the value of the configured new CSP directive which should be parsed into a URL of a remote resource
+
+> 09.  Do features in this specification enable access to device sensors?
+
+No
+
+> 10.  Do features in this specification enable new script execution/loading mechanisms?
+
+Yes, this feature focuses on allowing a website to register JavaScript code to be loaded within new realms when are introduced into the execution environment of the website at runtime.
+While the browser somewhat knows already how to load JavaScript code within new realms with features such as `content_script:run_at`, granting such power to websites (rather than extensions) is necessarily new.
+
+> 11.  Do features in this specification allow an origin to access other devices?
+
+No
+
+> 12.  Do features in this specification allow an origin some measure of control over a user agent's native UI?
+
+No
+
+> 13.  What temporary identifiers do the features in this specification create or expose to the web?
+
+None
+
+> 14.  How does this specification distinguish between behavior in first-party and third-party contexts?
+
+This feature expects the website to provide a URL to a remote JavaScript file to be loaded within new same origin realms only, so naturally there's an important distinction where the file should only be loaded and executed within first-party contexts and not third-party contexts. Telling them apart should (hopefully) be rather straight forward since CSP is already very good at this exactly.
+
+> 15.  How do the features in this specification work in the context of a browser’s Private Browsing or Incognito mode?
+
+N/a
+
+> 16.  Does this specification have both "Security Considerations" and "Privacy Considerations" sections?
+
+ASK @yoavweiss
+
+> 17.  Do features in your specification enable origins to downgrade default security protections?
+
+No
+
+> 18.  What happens when a document that uses your feature is kept alive in BFCache (instead of getting destroyed) after navigation, and potentially gets reused on future navigations back to the document?
+
+N/a
+
+> 19.  What happens when a document that uses your feature gets disconnected?
+
+My feature takes place (start to finish) synchronously when the document is introduced to the environment, meaning that if disconnection takes place, it does so after my feature is done necessarily.
+
+> 20.  Does your feature allow sites to learn about the users use of assistive technology?
+
+No
+
+> 21.  What should this questionnaire have asked?
+
+Nothing that comes to mind atm
 
 ## Terminology
 
