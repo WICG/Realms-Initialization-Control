@@ -30,7 +30,7 @@ document.body.appendChild(iframe);
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
 * [Discussion](#Discussion)
-* [XXX](#XXX)
+* [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
 
