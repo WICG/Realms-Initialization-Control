@@ -235,6 +235,26 @@ Meaning, the top main realm is the only realm in a webpage with the power to set
 
 This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
 
+### Enforcing multiple policies
+
+According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
+
+Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
+
+So:
+```
+Content-Security-Policy: realm-init /x.js
+Content-Security-Policy: realm-init /y.js
+```
+
+Will fuse into:
+
+```
+Content-Security-Policy: realm-init /x.js /y.js
+```
+
+And will execute the scripts in that order.
+
 ### Comparison with `X-frames` and `frame-src`
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
