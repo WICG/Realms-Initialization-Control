@@ -31,7 +31,7 @@ document.body.appendChild(iframe);
 * [Use Cases](#Use-Cases)
 * [Value](#Value)
 * [Discussion](#Discussion)
-* [XXX](#XXX)
+* [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
 
