@@ -250,7 +250,14 @@ Landing this proposal, will allow to safely mitigate powerful capabilities all a
 
 #### [MetaMask's](https://github.com/metamask) [LavaMoat](https://github.com/lavamoat)
 
+Another project maintained by the MetaMask team is LavaMoat which focuses on sandboxing each dependency in the supply chain of a JavaScript based application and confine it to a minimum set of APIs it needs.
 
+Since each dependency gets its own set of APIs it should have acces to, LavaMoat makes the hosting environment as useless as possible by blocking access to powerful capabilities it normally provides, so that if confined code somehow manages to escape the sandbox, it won't find powerful capabilities outside of it.
+
+Unfortunately, given the `document` capability isn't a property that can be mitigated due to it being a non-configurable property, attackers can abuse it to form same origin realms and reach all the capabilities the LavaMoat tool is trying to hide.
+Having a controling API such as the proposed RIC would allow LavaMoat to apply such mitigations to all realms of the app automatically - not just the top level realm.
+
+> This desired behaviour is currently accomplished using Snow (see #Prior art), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)
 
 ## Discussion
 
