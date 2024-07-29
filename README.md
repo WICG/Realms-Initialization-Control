@@ -215,7 +215,32 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-> *Adding use cases is a WIP - if you find this proposal useful (or just want to explore some potential use cases), help by visiting [#4](https://github.com/weizman/Realms-Initialization-Control/issues/4) and share your use case to push this proposal forward!*
+Here are some use cases introduced by the community which led to composing this proposal:
+
+### Safe composability (sandboxing / confinement)
+
+> _This use case is approved by [Shopify](https://github.com/shopify) and [MetaMask](https://github.com/metamask)_
+
+Leading web platforms attempt to allow their users/customers to extend the functionality they provide by default, which is in fact an important trend in unleashing the true power of what the web has to offer as an infrastructure, because this allows them to become more than just services, but rather actual fully capable platforms. This concept is also known as composability, and there are powerful examples of how platforms that provide a high level of composablity tend to thrive.
+
+The downside to composability is usually security, and that well applies to the web too.
+In many occasions, confinement of untrusted code (such as code that extends platform functionality) is being done via mitigation of access and/or power of capabilities.
+Problem is, with how the web is currently designed, reaching such powerful capabilities - even when tamed/mitigated - is still possible due to the same origin concern (which this proposal attempts to address).
+
+Here are some well known examples of this:
+
+#### [Shopify's](https://github.com/shopify) [Web Pixles](https://shopify.dev/docs/apps/build/marketing-analytics/pixels#lax-sandbox-custom-web-pixel)
+
+The well known e-commerce businesses platform Shopify allows developers to extend functionality of online shops they host so that both shop owners and users gain more value from the platform.
+Since this neccessarily means the platform must find a way to safely embed code it can't fully trust, Shopify design an in-house solution for how to embed such code in a mitigated and confined way.
+
+[Web Pixles](https://shopify.dev/docs/apps/build/marketing-analytics/pixels#lax-sandbox-custom-web-pixel) is one example of that, where they embed the untrusted code within a sandboxed iframe with hope to confine it, but would obviously feel far more confident in their solution if they could make sure reaching powerful capabilities the untrusted code should not have access to would be impossible (which is something this proposal aspires to fix)
+
+#### [MetaMask's](https://github.com/metamask) [Snaps](https://metamask.io/snaps/)
+
+
+
+#### [MetaMask's](https://github.com/metamask) [LavaMoat](https://github.com/lavamoat)
 
 ## Discussion
 
