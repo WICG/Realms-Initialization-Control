@@ -215,7 +215,9 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-Here are some use cases introduced by the community which led to composing this proposal:
+Here are some use cases introduced by the community which led to composing this proposal.
+
+> Please note that on our attempt to list use cases, we link them to real life examples by providing names of companies and/or products - none of them has actively reached out and provided their feedback on this proposal, but are meerly given as use cases examples (unless clearly stated so at the top of each use case).
 
 ### Safe composability (sandboxing / confinement)
 
