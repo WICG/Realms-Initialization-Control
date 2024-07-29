@@ -257,7 +257,17 @@ Since each dependency gets its own set of APIs it should have acces to, LavaMoat
 Unfortunately, given the `document` capability isn't a property that can be mitigated due to it being a non-configurable property, attackers can abuse it to form same origin realms and reach all the capabilities the LavaMoat tool is trying to hide.
 Having a controling API such as the proposed RIC would allow LavaMoat to apply such mitigations to all realms of the app automatically - not just the top level realm.
 
-> This desired behaviour is currently accomplished using Snow (see[#Prior art](#Prior-art)), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)
+> This desired behaviour is currently accomplished using Snow (see [#Prior art](#Prior-art)), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)
+
+#### Others
+
+Composability is a strong use case which is perused by many great web platforms that are trying to both embed code written by others and confine it within the browser ecosystem (such as Salesforce, Figma, Wix and more).
+
+### Application Monitoring
+
+> _This use case is approved by [Akamai](https://github.com/akamai)
+
+TODO
 
 ## Discussion
 
