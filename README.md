@@ -240,9 +240,17 @@ Since this neccessarily means the platform must find a way to safely embed code 
 
 #### [MetaMask's](https://github.com/metamask) [Snaps](https://metamask.io/snaps/)
 
+MetaMask's crypto wallet is a browser extension that provides blockchain related services such as self custodial custody of crypto assets, blockchain communication and more.
+Some of its more prominent projects is the snaps platform, which effectively allows developers to build their own logic in the form of JavaScript plugins to extend the functionality the wallet provides by default.
 
+While is solved to a certain extent, the current implementation of the solution isn't the ideal approach the project aimed for.
+Snaps (the untrusted JavaScript plugin code) currently are executed within Web Workers so that they can't reach powerful capabilities, because as opposed to other environments, Web Workers do not allow JavaScript code to form other same origin realms to begin with and thus are not under the same origin concern risk.
+
+Landing this proposal, will allow to safely mitigate powerful capabilities all around the app - not just the top level realm - thus eliminating the same origin concern and allowing to implement plugin systems such as snaps outside of Web Workers in more capable environments where DOM APIs are of service and can provide great value to software bits such as snaps.
 
 #### [MetaMask's](https://github.com/metamask) [LavaMoat](https://github.com/lavamoat)
+
+
 
 ## Discussion
 
