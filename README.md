@@ -217,7 +217,7 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 Here are some use cases introduced by the community which led to composing this proposal.
 
-> Please note that on our attempt to list use cases, we link them to real life examples by providing names of companies and/or products - none of them has actively reached out and provided their feedback on this proposal, but are meerly given as use cases examples (unless clearly stated so at the top of each use case).
+> _Please note that on our attempt to list use cases, we link them to real life examples by providing names of companies and/or products - none of them has actively reached out and provided their feedback on this proposal, but are merely given as use cases examples (unless clearly stated so at the top of each use case)._
 
 ### Safe composability (sandboxing / confinement)
 
@@ -257,7 +257,7 @@ Since each dependency gets its own set of APIs it should have acces to, LavaMoat
 Unfortunately, given the `document` capability isn't a property that can be mitigated due to it being a non-configurable property, attackers can abuse it to form same origin realms and reach all the capabilities the LavaMoat tool is trying to hide.
 Having a controling API such as the proposed RIC would allow LavaMoat to apply such mitigations to all realms of the app automatically - not just the top level realm.
 
-> This desired behaviour is currently accomplished using Snow (see [#Prior art](#Prior-art)), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)
+> _This desired behaviour is currently accomplished using Snow (see [#Prior art](#Prior-art)), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)_
 
 #### Others
 
@@ -265,7 +265,7 @@ Composability is a strong use case which is perused by many great web platforms 
 
 ### Application Monitoring (security / errors / performance)
 
-> _This use case is approved by [Akamai](https://github.com/akamai)
+> _This use case is approved by [Akamai](https://github.com/akamai)_
 
 Many well known companies provide monitoring services for web applications in the form of 3rd party scripts that are expected to be included in the top of the HTML file that represents the app.
 Once installed, such scripts emulate the behaviour of different JavaScript APIs by hooking into them at runtime (aka "monkey patching") which then allows them to monitor the behaviour of the application as well as alter it.
