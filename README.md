@@ -263,11 +263,36 @@ Having a controling API such as the proposed RIC would allow LavaMoat to apply s
 
 Composability is a strong use case which is perused by many great web platforms that are trying to both embed code written by others and confine it within the browser ecosystem (such as Salesforce, Figma, Wix and more).
 
-### Application Monitoring
+### Application Monitoring (security / errors / performance)
 
 > _This use case is approved by [Akamai](https://github.com/akamai)
 
-TODO
+Many well known companies provide monitoring services for web applications in the form of 3rd party scripts that are expected to be included in the top of the HTML file that represents the app.
+Once installed, such scripts emulate the behaviour of different JavaScript APIs by hooking into them at runtime (aka "monkey patching") which then allows them to monitor the behaviour of the application as well as alter it.
+
+While "Monitoring" is mentioned from the perspective of both performance and error tracking, it is security to which this proposal is most important.
+
+Here are some well known examples of this:
+
+#### [Akamai's](https://github.com/akamai) [mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring)
+
+The well known cloud company [Akamai](https://github.com/akamai) provide such services where by installing their script in your website they can provide insights into how your application performs, what's your users' experience and whether there are any errors or issues it experiences in the browsers of your users.
+
+In order to accomplish that, such services hook into relevant JavaScript APIs which allows them to collect information which later on they translate into insights.
+
+However, being able to gain insights into other same origin realms that live within such applications could help mPulse broaden their reach, thus providing insights into less explored areas of the app in a more natural and consistent way.
+
+#### [Akamai's](https://github.com/akamai) [Page Integrity Manager](https://www.akamai.com/site/en/documents/product-brief/page-integrity-manager-product-brief.pdf)
+
+While performance and/or error tracking is a great argument, it's even more true in context of security, because for attackers, being able to reach into same origin realms they create and by that grab capabilities that were intentionally mitigated by the security vendor, really undermines the whole purpose of it, thus requiring the vendor to integrate more resilient approaches to mitigate such capabilities across all realms within the app (which is exactly what this proposal focuses on).
+
+#### Order of execution
+
+Another point brought up by Akamai which is relevant to both former use cases is how integrating such services with each other (or with other vendors' services) is rather difficult because of how there's no feature that can help with manifesting a clear order of execution of services. Meaning, when there's no proper way to order the chronological execution of scripts within all realms under the same origin, there are sometimes painful clashes between different services. This can be better regulated with a feature such as proposed here.
+
+#### Others
+
+Monitoring services are an important component of modern web applications and therefore there are many other actors that would be interested in such a solution, whether for security (such as PerimeterX CodeDefender, Transcend airgap.js and more) or performance and error tracking (such as Sentry, DataDog and more).
 
 ## Discussion
 
