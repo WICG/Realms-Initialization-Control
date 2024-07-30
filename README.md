@@ -292,7 +292,8 @@ Another point brought up by Akamai which is relevant to both former use cases is
 
 #### Others
 
-Monitoring services are an important component of modern web applications and therefore there are many other actors that would be interested in such a solution, whether for security (such as PerimeterX CodeDefender, Transcend airgap.js and more) or performance and error tracking (such as Sentry, DataDog and more).
+Monitoring services are an important component of modern web applications and therefore there are many other actors that would be interested in such a solution, whether for security (such as PerimeterX CodeDefender, Transcend airgap.js, JScrambler Webpage Integrity and more) or performance and error tracking (such as Sentry, DataDog and more).
+
 
 ## Discussion
 
