@@ -29,6 +29,7 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
+* [Value](#Value)
 * [Discussion](#Discussion)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
@@ -216,6 +217,25 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 ## Use Cases
 
 > *Adding use cases is a WIP - if you find this proposal useful (or just want to explore some potential use cases), help by visiting [#4](https://github.com/weizman/Realms-Initialization-Control/issues/4) and share your use case to push this proposal forward!*
+
+## Value
+
+While this feature is developers facing, the value it aspires to introduce is for the end users really, because until this proposal lands, the same origin concern prevents developers from building safe composable web applications within their own origin and instead place untrusted code within cross origin realms which affects the end user in 2 major ways:
+
+### User Experience
+
+Not being able to embed untrusted code in the same origin of the app either significantly decreases user experience or requires too great of effort on the builders' side to preserve a high level of UX.
+
+Since the current design of the web takes SOP very seriously, it refuses to smoothly interact with cross origin documents (for legitimate reasons), which means user facing parts of the app that are linked to untrusted code living within a cross origin document can't naturally inherit important properties the top level document dictates (such as CSS), which results in a very unnatural and hard to maintain user experience.
+
+Introducing a solution such as proposed here can allow developers to include untrusted code within the origin of the app, thus embedding it in a far better method in terms of integration which will translate to a superior user experience while preserving end user security.
+
+### Improved Composability
+
+Not only this will allow to do things apps do today better, but this will also allow developers to introduce composability capabilities that aren't currently possible.
+
+Not being able to secure the origin of the app against untrusted code really limits developers to inferior solutions that require making use of cross origin realms, which effectively limits how far the power of composability can really go.
+Allowing such untrusted code to run in the origin of the app can allow it for example to freely interact with the DOM of the app, which isn't possible when embedded in a cross origin document, and when combined with this proposal, such interaction can be mitigated by the hosting app in a finally secure way. Since this example can be easily extended to many other use cases, it might become clear how such a proposal can unlock new power for web apps in the realm of secure composability and embedding of untrusted code.
 
 ## Discussion
 
