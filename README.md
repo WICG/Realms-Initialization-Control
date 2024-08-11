@@ -348,7 +348,7 @@ The only distinct information that's being provided to the user that was not pos
 
 > 06.  Do the features in your specification introduce state that persists across browsing sessions?
 
-The only thing that might persist across browsing sessions is a new cached resource which is the remote JavaScript file that's being dictated to be fetched and executed by the new proposed CSP directive in the proposal
+No
 
 > 07.  Do the features in your specification expose information about the underlying platform to origins?
 
@@ -356,7 +356,7 @@ No
 
 > 08.  Does this specification allow an origin to send data to the underlying platform?
 
-The only data that's being sent to the underlying platform is the value of the configured new CSP directive which should be parsed into a URL of a remote resource
+The answer is basically no aside for the value of the configured new CSP directive which should be parsed into a URL of a remote resource
 
 > 09.  Do features in this specification enable access to device sensors?
 
@@ -365,7 +365,7 @@ No
 > 10.  Do features in this specification enable new script execution/loading mechanisms?
 
 Yes, this feature focuses on allowing a website to register JavaScript code to be loaded within new realms when are introduced into the execution environment of the website at runtime.
-While the browser somewhat knows already how to load JavaScript code within new realms with features such as `content_script:run_at`, granting such power to websites (rather than extensions) is necessarily new.
+While the browser somewhat knows already how to load JavaScript code within new realms with features such as web extensions' `content_script:run_at`, granting such power to websites (rather than extensions) is necessarily new.
 
 > 11.  Do features in this specification allow an origin to access other devices?
 
@@ -385,11 +385,11 @@ This feature expects the website to provide a URL to a remote JavaScript file to
 
 > 15.  How do the features in this specification work in the context of a browser’s Private Browsing or Incognito mode?
 
-N/a
+Behaves the same in both modes
 
 > 16.  Does this specification have both "Security Considerations" and "Privacy Considerations" sections?
 
-ASK @yoavweiss
+TODO - POINT TO ONCE DONE!
 
 > 17.  Do features in your specification enable origins to downgrade default security protections?
 
