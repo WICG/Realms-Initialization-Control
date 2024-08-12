@@ -258,7 +258,7 @@ Since this proposal focuses on the thin line between same and cross origins, it 
 
 Since the proposed CSP directive introduces a remote resource to be treated as JavaScript code to execute in all realms that their origin corresponds to the origin of the top most document, if telling same from cross origin goes wrong, the browser may execute the JavaScript code in a cross realm rather than an origin realm, resulting in a Universal XSS effectively.
 
-So if website A finds such a flaw in the implementation, they can easily initiate a Universal XSS by taking the following steps:
+So if website `attacker.com` finds such a flaw in the implementation, they can easily initiate a Universal XSS against `facebook.com` by taking the following steps:
 
 ```html
 <!-- Content-Security-Policy: init-realm: /x.js -->
