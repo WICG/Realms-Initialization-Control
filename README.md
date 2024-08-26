@@ -273,7 +273,7 @@ No
 
 > 08.  Does this specification allow an origin to send data to the underlying platform?
 
-The answer is basically no aside for the value of the configured new CSP directive which should be parsed into a URL of a remote resource
+No
 
 > 09.  Do features in this specification enable access to device sensors?
 
