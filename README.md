@@ -381,7 +381,7 @@ None
 
 > 14.  How does this specification distinguish between behavior in first-party and third-party contexts?
 
-This feature expects the website to provide a URL to a remote JavaScript file to be loaded within new same origin realms only, so naturally there's an important distinction where the file should only be loaded and executed within first-party contexts and not third-party contexts. Telling them apart should (hopefully) be rather straight forward since CSP is already very good at this exactly.
+This feature enables sites to run a remote JavaScript file in the context of new same-origin realms, and only such realms. As same-origin is stricter than same-site, the distinction between first-party and third-party contexts falls out of that restriction.
 
 > 15.  How do the features in this specification work in the context of a browser’s Private Browsing or Incognito mode?
 
