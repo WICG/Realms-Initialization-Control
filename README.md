@@ -242,11 +242,11 @@ This already goes with how CSP is currently enforcing its rules canonically in t
 
 ## Considerations
 
-Some important points to consider
+This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs.
 
 ### Privacy
 
-There isn't much to take into consideration in regards with privacy.
+This feature doesn't provide any information about the user, and hence doesn't have privacy aspects to consider.
 
 ### Security
 
