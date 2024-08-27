@@ -256,28 +256,13 @@ Here are some security risks to take into consideration when following this spec
 
 Since this proposal focuses on the thin line between same and cross origins, it may put SOP in danger if not implemented correctly.
 
-Since the proposed CSP directive introduces a remote resource to be treated as JavaScript code to execute in all realms that their origin corresponds to the origin of the top most document, if telling same from cross origin goes wrong, the browser may execute the JavaScript code in a cross realm rather than an origin realm, resulting in a Universal XSS effectively.
+This proposal enables any top-level document to execute remote scripts in same-origin realms.
 
-So if website `attacker.com` finds such a flaw in the implementation, they can easily initiate a Universal XSS against `facebook.com` by taking the following steps:
+If implementations somehow enable that execution to happen in cross-origin realms, that can enable cross-origin scripting in those realms.
 
-```html
-<script src="/x.js">
-   // browser got tricked into running RIC script under a cross origin:
-   alert(document.cookie); // will execute under facebook.com
-</script>
+Since such scenrio is the result of a browser level mistake, running cross-origin scripts like that can be abused by attackers against any origin they choose, making this a far more dangerous version of XSS known as Universal XSS.
 
-<!-- Content-Security-Policy: init-realm: /x.js -->
-
-<html location="//attacker.com">
-<script>
-   createAnIframeThatBypassesRIC({src: '//facebook.com'});
-</script>
-</html>
-```
-
-Therefore, it is crucial to make sure that the check in which it is determined whether the origin is the same as the top most document or not is firm and trustworthy and takes all possible edge cases into account.
-
-While this sounds alarming, since this proposal advises to tap into existing places in which such information is safely determined, it is fair to believe this can be implemented safely just as well.
+Therefore it's important for implementations to get that part right, and for tests to throughly cover that possibility (this is similar to other powerful features that heavily rely on the same-origin policy, such as Service Workers).
 
 #### Escalation to Code Execution
 
