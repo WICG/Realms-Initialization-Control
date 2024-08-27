@@ -30,7 +30,7 @@ document.body.appendChild(iframe);
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
 * [Discussion](#Discussion)
-* [Consideration](#Consideration)
+* [Considerations](#Considerations)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
 
@@ -240,7 +240,7 @@ This already goes with how CSP is currently enforcing its rules canonically in t
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
 
-## Consideration
+## Considerations
 
 Some important points to consider
 
