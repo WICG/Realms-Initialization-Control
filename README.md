@@ -224,11 +224,13 @@ While this feature is developers facing, the value it aspires to introduce is fo
 
 ### User Experience
 
-Not being able to embed untrusted code in the same origin of the app either significantly decreases user experience or requires too great of effort on the builders' side to preserve a high level of UX.
+The feature aims to enable developers to provide better user experiences when embedding untrusted code into their applications.
 
-Since the current design of the web takes SOP very seriously, it refuses to smoothly interact with cross origin documents (for legitimate reasons), which means user facing parts of the app that are linked to untrusted code living within a cross origin document can't naturally inherit important properties the top level document dictates (such as CSS), which results in a very unnatural and hard to maintain user experience.
+Currently when embedding untrusted code, developers are using cross-origin iframes or workers for that purpose, which often creates separate experiences from their own content.
 
-Introducing a solution such as proposed here can allow developers to include untrusted code within the origin of the app, thus embedding it in a far better method in terms of integration which will translate to a superior user experience while preserving end user security.
+While developers can restrict their own documents (by overriding various JS functions and DOM APIs), attackers can use same-origin realms to regain access to these prototypes.
+
+This proposal enables developers to prevent attackers from regaining access to native prototypes, and hence embed untrusted code into their documents in a safe way. This provides users with richer and more coherent embedded experiences on the web.
 
 ### Improved Composability
 
