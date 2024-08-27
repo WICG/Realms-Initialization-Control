@@ -301,30 +301,9 @@ Therefore, it might be important to make sure the address to the remote script r
 
 #### Integrity of Execution Order
 
-When implementing this proposal, it is crucial to correctly instruct the browser to check whether the scripts introduced via the proposed directive under each document actually loaded under it (and do so once if it turns out they didn't) the moment the document object was successfully constructed and is ready to start parsing HTML.
+When implementing this proposal, it is crucial to correctly instruct the browser to make sure the script provided via the `init-realm` CSP directive is the first JavaScript code to run within the realm, as in before any scripts dictated to run by its associated document (and to repeat that to all nested same origin realms).
 
-Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely:
-
-```html
-<script src="/x.js">
-   // use RIC to disable "alert()"
-   window.alert = undefined;
-</script>
-
-<!-- Content-Security-Policy: script-src: 'self'; init-realm: /x.js -->
-
-<html location="//example.com">
-   <script name="evil">
-      let a = alert;
-      if (typeof a !== 'function') {
-         const ifr = createAnIframeThatBypassesRIC({src: 'about:blank'});
-         // next line counts on RIC not kicking in soon enough:
-         a = ifr.contentWindow.alert;
-      }
-      a('BYPASSED');
-   </script>
-</html>
-```
+Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
 
 ## Terminology
 
