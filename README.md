@@ -364,7 +364,7 @@ In that context, it might be worth reflecting possible alternatives and their pr
    * CON - Even if mitigated, still potentially an escalation, for example if attacker can introduce HTML tags but is blocked from getting them to execute thanks to a strict `script-src` implementation, providing a meta tag with `init-realm` can help them escalate to XSS).
 3. API (via JavaScript) - instead of CSP, export a JavaScript API that registeres the script to run within all realms (e.g. `window.onRealmInit('/scripts/init-realm.js')`)
    * PRO - This mitigates possibilities for escalations towards code execution, because in order to abuse this feature the attacker must have code execution abilities to begin with
-   * CON - Potentially allows all scripts in the page to register their own script (although probably not an issue, as long as order of registration is respected)
+   * CON - Potentially allows all scripts in the page to register their own script (although probably not an issue for 1st party scripts, as long as order of registration is respected, but perhaps sensitive with 3rd party scripts?)
    * NOTE - Perhaps in a similar manner to `navigator.serviceWorker.register`?
 
 #### Integrity of Execution Order
