@@ -439,7 +439,7 @@ Behaves the same in both modes
 
 > 16.  Does this specification have both "Security Considerations" and "Privacy Considerations" sections?
 
-Both sections can be found under the [Consideration](#Consideration) section in this document, which will later be integrated into the proposed spec as well.
+Both sections can be found under the [Considerations](#Considerations) section in this document, which will later be integrated into the proposed spec as well.
 
 > 17.  Do features in your specification enable origins to downgrade default security protections?
 
