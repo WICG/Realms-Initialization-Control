@@ -19,6 +19,15 @@ document.body.appendChild(iframe);
 > _Authored by [Gal Weizman](https://github.com/weizman) , [Zbigniew Tenerowicz
 ](https://github.com/naugtur) ([participate here](https://github.com/weizman/Realms-Initialization-Control-API/issues))_
 
+## Status
+
+> _Stage: Incubated (WICG)_
+
+* [Intent to Prototype](https://groups.google.com/a/chromium.org/g/blink-dev/c/-mdLv7f_ZN4/)
+* [TAG Design Review](https://github.com/w3ctag/design-reviews/issues/985)
+* [Webkit Signal](https://github.com/WebKit/standards-positions/issues/389)
+* [Mozilla Signal](https://github.com/mozilla/standards-positions/issues/1062)
+
 ## Table of contents
 
 * [Abstract](#Abstract)
