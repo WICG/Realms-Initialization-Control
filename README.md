@@ -23,6 +23,7 @@ document.body.appendChild(iframe);
 
 > _Stage: Incubated (WICG)_
 
+* [Chrome Status](https://chromestatus.com/feature/5080729822953472)
 * [Intent to Prototype](https://groups.google.com/a/chromium.org/g/blink-dev/c/-mdLv7f_ZN4/)
 * [TAG Design Review](https://github.com/w3ctag/design-reviews/issues/985)
 * [Webkit Signal](https://github.com/WebKit/standards-positions/issues/389)
