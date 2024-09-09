@@ -357,7 +357,9 @@ This means that using ShadowRealms to host untrusted code will be quite useful f
 
 While this can potentially answer many important [use cases](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#use-cases), this means ShadowRealm is irrelevant for preserving the integrity of the hosting environment against untrusted code that requires to run in the same context as the hosting environment.
 
-Meaning, code we don't trust that must run in the top realm of the app cannot be moved and confined within a different realm, even if it shares an agent, including a ShadowRealm.
+Meaning, code we don't trust that must run in the top realm of the app cannot be moved and confined within a different realm, even if it shares an agent (including a ShadowRealm), thus leaving the current state of the web defensless in terms of integrity against untrusted code of such nature.
+
+This is the aspect the RIC proposal aims to address that no other web feature currently does.
 
 The two proposals overlap in their will to introduce better ways to preserve the integrity of programs, the difference is that ShadowRealm provides this by running code that might harm the integrity away from the hosting environment, while RIC allows to tame the capabilities provided by the host environment for code that must share space with the hosting realm (visit [use cases](https://github.com/WICG/Realms-Initialization-Control#Use-Cases) for examples).
 
