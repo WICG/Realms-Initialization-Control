@@ -39,9 +39,19 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
+    * [Safe composability](#safe-composability-sandboxing--confinement)
+    * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
 * [Value](#Value)
+    * [User Experience](#User-Experience)
+    * [Improved Composability](#Improved-Composability)
 * [Discussion](#Discussion)
+    * [Feasibility and implementation](#Feasibility-and-implementation)
+    * [Canonicality](#Canonicality)
+    * [Multiple CSP policies](#Multiple-CSP-policies)
+    * [`X-frames` and `frame-src`](#X-frames-and-frame-src)
 * [Considerations](#Considerations)
+    * [Privacy](#Privacy)
+    * [Security](#Security)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
@@ -310,7 +320,7 @@ Meaning, the top main realm is the only realm in a webpage with the power to set
 
 This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
 
-### Enforcing multiple policies
+### Multiple CSP policies
 
 According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
 
@@ -330,7 +340,7 @@ Content-Security-Policy: realm-init /x.js /y.js
 
 And will execute the scripts in that order.
 
-### Comparison with `X-frames` and `frame-src`
+### `X-frames` and `frame-src`
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
 
