@@ -49,6 +49,7 @@ document.body.appendChild(iframe);
     * [Canonicality](#Canonicality)
     * [Multiple CSP policies](#Multiple-CSP-policies)
     * [`X-frames` and `frame-src`](#X-frames-and-frame-src)
+    * [ShadowRealms](#ShadowRealms)
 * [Considerations](#Considerations)
     * [Privacy](#Privacy)
     * [Security](#Security)
@@ -343,6 +344,10 @@ And will execute the scripts in that order.
 ### `X-frames` and `frame-src`
 
 `X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
+
+### ShadowRealms
+
+TODO
 
 ## Considerations
 
