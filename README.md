@@ -48,7 +48,9 @@ document.body.appendChild(iframe);
     * [Feasibility and implementation](#Feasibility-and-implementation)
     * [Canonicality](#Canonicality)
     * [Multiple CSP policies](#Multiple-CSP-policies)
-    * [`X-frames` and `frame-src`](#X-frames-and-frame-src)
+* [Insufficient Alternatives](#Insufficient-Alternatives)
+    * [Headers](#headers)
+    * [CSP](#CSP)
     * [ShadowRealms](#ShadowRealms)
 * [Considerations](#Considerations)
     * [Privacy](#Privacy)
@@ -341,9 +343,21 @@ Content-Security-Policy: realm-init /x.js /y.js
 
 And will execute the scripts in that order.
 
-### `X-frames` and `frame-src`
+## Insufficient Alternatives
 
-`X-frames` and `frame-src` allow controlling what is allowed to be loaded into an `iframe`. Regardless of their use to deny loading content in iframes, ways to crete new same origin realms remain available, such as creating an `about:blank` iframe, opening a new tab using `open` API and more.
+Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
+
+### Headers
+
+As far as we're aware, there are no headers that can help with mitigating the same origin concern.
+
+* `X-frames` - This header is insufficient to address the problem because it doesn't allow to tame the environments of same origin realms, but only to prevent all same origin realms from loading within the page. Additionally, only remotely loaded resources obey this header, meaning same origin realms such as `iframe[src="about:blank"]` won't.
+
+### CSP
+
+As far as we're aware, there are no CSP directives that can help with mitigating the same origin concern.
+
+The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
 
 ### [ShadowRealms](https://github.com/tc39/proposal-shadowrealm/)
 
