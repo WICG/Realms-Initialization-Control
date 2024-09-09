@@ -346,7 +346,7 @@ And will execute the scripts in that order.
 
 ## Considerations
 
-This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs.
+This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs, as well as when implementing by browsers vendors.
 
 ### Privacy
 
