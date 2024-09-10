@@ -548,7 +548,15 @@ The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of rea
 
 ## Support
 
-TODO
+This section lists references to publicly expressed support of the RIC proposal:
+
+* The RIC proposal was presented and supported by participants as part of the W3C's "secure the web forward" workshop
+   * https://www.w3.org/2023/03/secure-the-web-forward/talks/realms.html
+   * https://www.w3.org/2023/03/secure-the-web-forward/report.html
+* The RIC proposal was presented to W3C's web performance group, where some participants expressed their support
+   * https://github.com/WICG/Realms-Initialization-Control/issues/4 (documentation of the supporters)
+   * This thread includes both support expressed by participants of that meeting as well as more support that followed it
+* Following the expressed support listed above, the RIC proposal was eaccepted to the WICG incubation program to push this proposal forward
 
 ## Resources
 
