@@ -56,7 +56,7 @@ document.body.appendChild(iframe);
    * [Headers](#headers)
    * [CSP](#CSP)
    * [ShadowRealms](#ShadowRealms)
-   * [Sandboxed / Cross Origin iframes](#Sandboxed--Cross-Origin-iframes)
+   * [Sandboxed / Cross Origin iframes and Workers](#Sandboxed--Cross-Origin-iframes-and-workers)
    * [Document Policy](#Document-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
@@ -428,7 +428,7 @@ The only directives that revolve around realms security issues are `iframe` rela
 
 TODO
 
-### Sandboxed / Cross Origin iframes
+### Sandboxed / Cross Origin iframes and Workers
 
 TODO
 
