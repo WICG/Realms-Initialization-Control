@@ -52,6 +52,7 @@ document.body.appendChild(iframe);
    * [CSP Integration](#CSP-Integration)
    * [Performance](#Performance)
 * [Insufficient Alternatives](#Insufficient-Alternatives)
+   * [Realms](#realms)
    * [Headers](#headers)
    * [CSP](#CSP)
    * [ShadowRealms](#ShadowRealms)
@@ -406,6 +407,17 @@ TODO
 ## Insufficient Alternatives
 
 Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
+
+### Realms
+
+Since the RIC proposal focuses on enabling integration of untrusted code into web apps at runtime, it's oftenly confused with realms-based alternatives, as in taking such code and confining it within a separate realm to achieve desired integration safely.
+
+> _Why RIC? Why not just confine untrusted code within another realm?_
+
+While true, such practice is only applicable to use cases of a very specific nature, in which such untrusted code can be migrated into a separate realm for confinement purposes, but when dealing with untrusted code that must be executed within the main realm of the app, realms-based solutions don't provide any value whatsoever.
+
+* Visit [Use Cases](#use-cases) to learn more about brands of untrusted code that's expected to be loaded within the same realm as the app.
+* Visit [ShadowRealms](#ShadowRealms) to learn more about why realms-based alternatives don't provide enough value for untrusted code of such nature.
 
 ### Headers
 
