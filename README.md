@@ -39,8 +39,8 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
-   * [Safe Composability](#Safe-Composability)
-   * [Application Monitoring](#Application-Monitoring)
+    * [Safe Composability](#safe-composability-sandboxing--confinement)
+    * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
 * [Value](#Value)
     * [User Experience](#User-Experience)
     * [Improved Composability](#Improved-Composability)
@@ -56,7 +56,7 @@ document.body.appendChild(iframe);
     * [CSP](#CSP)
    * [ShadowRealms](#ShadowRealms)
    * [Sandboxed / Cross Origin iframes](#Sandboxed--Cross-Origin-iframes)
-   * [Document Policy](#Document Policy)
+   * [Document Policy](#Document-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Support](#Support)
@@ -359,7 +359,7 @@ When implementing this proposal, it is crucial to correctly instruct the browser
 
 Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
 
-### Feasibility and implementation
+### Feasibility
 
 The proposed mechanism mostly relies on functionality already present elsewhere in the browser.
 
