@@ -31,6 +31,37 @@ document.body.appendChild(iframe);
 
 ## Table of contents
 
+* Abstract
+* Motivation
+   * Prior Art
+   * Limitations
+* Goals
+* Proposal
+* Example
+* Use Cases
+   * Safe Composability
+   * Application Monitoring
+* Value
+   * User Experience
+   * Improved Composability
+* Considerations
+   * Privacy
+   * Security
+   * Feasibility
+   * Canonicality
+   * CSP Integration
+   * Performance
+* Insufficient Alternatives
+   * Headers
+   * CSP
+   * ShadowRealms
+   * Sandboxed / Cross Origin iframes
+   * Document Policy
+* Self-Review Questionnaire: Security and Privacy
+* Terminology
+* Support
+* Resources
+
 * [Abstract](#Abstract)
 * [Motivation](#Motivation)
     * [Prior art](#Prior-art)
