@@ -188,7 +188,12 @@ Initialization of same origin realms in an application should be under that appl
 
 This proposal describes an opt-in capability to set a script to be loaded first, everytime a same origin realm with synchronous access to the main execution environment of the application is created.
 
-The location of the script can be relative or absolute. Secure connection is required.
+For it to be safe to use, some crucial properties/limitations must apply:
+
+* The location of the script can be relative or absolute, but must resolve to the same origin as the web app.
+* Secure connection is required.
+* The resource provided must explicitly state its ContentType as of JavaScript.
+
 The proposed method for setting the script is a Content Security Policy directive as follows:
 
 ```
