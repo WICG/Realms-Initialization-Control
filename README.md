@@ -425,7 +425,7 @@ TODO
 
 ### Sandboxed / Cross Origin iframes
 
-Cross agent realms such as cross origin or sandboxed iframes suffer from the same problem described under the [ShadowRealms](#ShadowRealms) section, where they're only useful for code that can be moved over into another realm to be confined there, which doesn't apply to many other use cases where other brands of untrusted code must be integrated and executed in the same realm space as the app's (as described under [ShadowRealms](#ShadowRealms)).
+Cross agent realms such as cross origin or sandboxed iframes suffer from the same problem described under the [Realms](#Realms) section, where they're only useful for code that can be moved over into another realm to be confined there, which doesn't apply to many other use cases where other brands of untrusted code must be integrated and executed in the same realm space as the app's (as described under [Realms](#Realms)).
 
 ### Document Policy
 
