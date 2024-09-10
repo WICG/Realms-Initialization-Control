@@ -401,7 +401,16 @@ And will execute the scripts in that order.
 
 ### Performance
 
-TODO
+Naturally, the RIC proposal will introduce a performance impact, but that is somewhat by design if you want to control the creation phase of same origin realms within your app (to which you are not obligated to opt-in to).
+
+The current alternative is that web apps that wish to address this issue integrate [snow](https://github.com/lavamoat/snow)-like solutions that solve this problem using JS, which is necessarily inferior to a built-in solution such as the proposed RIC.
+
+Those who need this will see a perf improvement, migrating from a user-land solution to a native-based one.
+Those who find this to not be worth it these days, will either continue to think so or perhaps change their minds given how RIC will be faster than current user-land alternatives.
+
+This is a security feature, in which running first is crucial, thus the introduction of a perf-impact to this (opt-in) feature is pretty natural - there's no other way to do this really.
+
+To mitigate the necessary performance hit, implementers are expected to fetch the RIC resource when is introduced at the headers parsing stage in parallel to other stages, but only until reaching the DOM parsing stage which must be delayed until the RIC resource is both fetched and loaded (executed) to completion.
 
 ## Insufficient Alternatives
 
