@@ -52,8 +52,9 @@ document.body.appendChild(iframe);
    * [CSP Integration](#CSP-Integration)
    * [Performance](#Performance)
 * [Insufficient Alternatives](#Insufficient-Alternatives)
-    * [Headers](#headers)
-    * [CSP](#CSP)
+   * [Realms](#realms)
+   * [Headers](#headers)
+   * [CSP](#CSP)
    * [ShadowRealms](#ShadowRealms)
    * [Sandboxed / Cross Origin iframes](#Sandboxed--Cross-Origin-iframes)
    * [Document Policy](#Document-Policy)
@@ -406,6 +407,10 @@ TODO
 ## Insufficient Alternatives
 
 Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
+
+### Realms
+
+TODO
 
 ### Headers
 
