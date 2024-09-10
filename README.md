@@ -31,37 +31,6 @@ document.body.appendChild(iframe);
 
 ## Table of contents
 
-* Abstract
-* Motivation
-   * Prior Art
-   * Limitations
-* Goals
-* Proposal
-* Example
-* Use Cases
-   * Safe Composability
-   * Application Monitoring
-* Value
-   * User Experience
-   * Improved Composability
-* Considerations
-   * Privacy
-   * Security
-   * Feasibility
-   * Canonicality
-   * CSP Integration
-   * Performance
-* Insufficient Alternatives
-   * Headers
-   * CSP
-   * ShadowRealms
-   * Sandboxed / Cross Origin iframes
-   * Document Policy
-* Self-Review Questionnaire: Security and Privacy
-* Terminology
-* Support
-* Resources
-
 * [Abstract](#Abstract)
 * [Motivation](#Motivation)
     * [Prior art](#Prior-art)
@@ -70,23 +39,27 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
-    * [Safe composability](#safe-composability-sandboxing--confinement)
-    * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
+   * [Safe Composability](#Safe-Composability)
+   * [Application Monitoring](#Application-Monitoring)
 * [Value](#Value)
     * [User Experience](#User-Experience)
     * [Improved Composability](#Improved-Composability)
-* [Discussion](#Discussion)
-    * [Feasibility and implementation](#Feasibility-and-implementation)
-    * [Canonicality](#Canonicality)
-    * [Multiple CSP policies](#Multiple-CSP-policies)
+* [Considerations](#Considerations)
+   * [Privacy](#Privacy)
+   * [Security](#Security)
+   * [Feasibility](#Feasibility)
+   * [Canonicality](#Canonicality)
+   * [CSP Integration](#CSP-Integration)
+   * [Performance](#Performance)
 * [Insufficient Alternatives](#Insufficient-Alternatives)
     * [Headers](#headers)
     * [CSP](#CSP)
-* [Considerations](#Considerations)
-    * [Privacy](#Privacy)
-    * [Security](#Security)
+   * [ShadowRealms](#ShadowRealms)
+   * [Sandboxed / Cross Origin iframes](#Sandboxed--Cross-Origin-iframes)
+   * [Document Policy](#Document Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
+* [Support](#Support)
 * [Resources](#Resources)
 
 ## Abstract
