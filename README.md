@@ -42,8 +42,8 @@ document.body.appendChild(iframe);
    * [Safe Composability](#Safe-Composability)
    * [Application Monitoring](#Application-Monitoring)
 * [Value](#Value)
-    * [User Experience](#User-Experience)
-    * [Improved Composability](#Improved-Composability)
+    * [Safe Composability](#safe-composability-sandboxing--confinement)
+    * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
 * [Considerations](#Considerations)
    * [Privacy](#Privacy)
    * [Security](#Security)
@@ -246,7 +246,7 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 Here are some use cases introduced by the community which led to the composition of this proposal.
 
-### Safe composability (sandboxing / confinement)
+### Safe Composability (sandboxing / confinement)
 
 The ability to safely embed untrusted code in a safe way is important for composability. Platforms can use it to allow their users as well as third party providers to enhance their provided functionality, and provide value to end users.
 
@@ -308,63 +308,11 @@ Not only this will allow to do things apps do today better, but this will also a
 Not being able to secure the origin of the app against untrusted code really limits developers to inferior solutions that require making use of cross origin realms, which effectively limits how far the power of composability can really go.
 Allowing such untrusted code to run in the origin of the app can allow it for example to freely interact with the DOM of the app, which isn't possible when embedded in a cross origin document, and when combined with this proposal, such interaction can be mitigated by the hosting app in a finally secure way. Since this example can be easily extended to many other use cases, it might become clear how such a proposal can unlock new power for web apps in the realm of secure composability and embedding of untrusted code.
 
-## Discussion
-
-### Feasibility and implementation
-
-The proposed mechanism mostly relies on functionality already present elsewhere in the browser.
-
-* Running the pre-defined script on each realm initialization already exists in browser extensions as `"run_at": "document_start"` for content scripts.
-* Setting the script is being done via CSP, which is an excellent mechanism for canonically enforcing rules to a certain origin.
-* Supplying a script path the browser would remember across page loads exists in service worker implementation.
-
-### Canonicality
-
-The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
-
-Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
-
-This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
-
-### Multiple CSP policies
-
-According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
-
-Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
-
-So:
-```
-Content-Security-Policy: realm-init /x.js
-Content-Security-Policy: realm-init /y.js
-```
-
-Will fuse into:
-
-```
-Content-Security-Policy: realm-init /x.js /y.js
-```
-
-And will execute the scripts in that order.
-
-## Insufficient Alternatives
-
-Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
-
-### Headers
-
-As far as we're aware, there are no headers that can help with mitigating the same origin concern.
-
-* `X-frames` - This header is insufficient to address the problem because it doesn't allow to tame the environments of same origin realms, but only to prevent all same origin realms from loading within the page. Additionally, only remotely loaded resources obey this header, meaning same origin realms such as `iframe[src="about:blank"]` won't.
-
-### CSP
-
-As far as we're aware, there are no CSP directives that can help with mitigating the same origin concern.
-
-The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
-
 ## Considerations
 
-This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs, as well as when implementing by browsers vendors.
+This section focuses on important details that were brought into consideration, as well as conclusions on how to address them.
+
+While important for achieving design that's both good and acceptable by stake holders, these considerations are also expected to be later on refered to and integrated into relevant specs and browsers' implementations (Security and Privacy especially).
 
 ### Privacy
 
@@ -410,6 +358,78 @@ In that context, it might be worth reflecting possible alternatives and their pr
 When implementing this proposal, it is crucial to correctly instruct the browser to make sure the script provided via the `init-realm` CSP directive is the first JavaScript code to run within the realm, as in before any scripts dictated to run by its associated document (and to repeat that to all nested same origin realms).
 
 Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
+
+### Feasibility and implementation
+
+The proposed mechanism mostly relies on functionality already present elsewhere in the browser.
+
+* Running the pre-defined script on each realm initialization already exists in browser extensions as `"run_at": "document_start"` for content scripts.
+* Setting the script is being done via CSP, which is an excellent mechanism for canonically enforcing rules to a certain origin.
+* Supplying a script path the browser would remember across page loads exists in service worker implementation.
+
+### Canonicality
+
+The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
+
+Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
+
+This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
+
+### CSP Integration
+
+This section focuses on how should the new RIC CSP directive behave in integration with current properties of CSP.
+
+#### Multiple CSP policies
+
+According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
+
+Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
+
+So:
+```
+Content-Security-Policy: realm-init /x.js
+Content-Security-Policy: realm-init /y.js
+```
+
+Will fuse into:
+
+```
+Content-Security-Policy: realm-init /x.js /y.js
+```
+
+And will execute the scripts in that order.
+
+### Performance
+
+TODO
+
+## Insufficient Alternatives
+
+Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
+
+### Headers
+
+As far as we're aware, there are no headers that can help with mitigating the same origin concern.
+
+* `X-frames` - This header is insufficient to address the problem because it doesn't allow to tame the environments of same origin realms, but only to prevent all same origin realms from loading within the page. Additionally, only remotely loaded resources obey this header, meaning same origin realms such as `iframe[src="about:blank"]` won't.
+
+### CSP
+
+As far as we're aware, there are no CSP directives that can help with mitigating the same origin concern.
+
+The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
+
+### ShadowRealms
+
+TODO
+
+### Sandboxed / Cross Origin iframes
+
+TODO
+
+### Document Policy
+
+TODO
 
 ## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
 
@@ -520,6 +540,10 @@ In the browser ecosystem, [realms](#Realm) are associated with an origin. For ex
 ### Cross Origin Realm
 
 The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross-origin realm to realm B, and vice versa.
+
+## Support
+
+TODO
 
 ## Resources
 
