@@ -327,6 +327,12 @@ For scenarios where such practice comes in handy (e.g. [Cloudflare Workers](http
 
 That being said, while RIC can be useful for extending confidentiality mitigations, it does not include confidentiality within the scope of security aspects it attempts to assist with.
 
+### Availiability
+
+Similarly to confidentiality, RIC isn't designed to address any availiability concerns, as it focuses on allowing apps to preserve their level of integrity against entities living within their own boundaries, which means such entities can DoS the app at any point given the fact they share the same agent (process).
+
+The rest of the arguments listed under the confidentiality section apply here just as well.
+
 ## Value
 
 While this feature is developers facing, the value it aspires to introduce is for the end users really, because until this proposal lands, the same origin concern prevents developers from building safe composable web applications within their own origin and instead place untrusted code within cross origin realms which affects the end user in 2 major ways:
