@@ -58,6 +58,7 @@ document.body.appendChild(iframe);
    * [ShadowRealms](#ShadowRealms)
    * [Sandboxed / Cross Origin iframes and Workers](#Sandboxed--Cross-Origin-iframes-and-workers)
    * [Document Policy](#Document-Policy)
+   * [Permissions Policy](#Permissions-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
@@ -432,6 +433,10 @@ TODO
 TODO
 
 ### Document Policy
+
+TODO
+
+### Permissions Policy
 
 TODO
 
