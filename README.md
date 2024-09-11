@@ -60,7 +60,6 @@ document.body.appendChild(iframe);
    * [Document Policy](#Document-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
-* [Support](#Support)
 * [Resources](#Resources)
 
 ## Abstract
