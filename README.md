@@ -311,6 +311,22 @@ Therefore, by providing a way to restore the power to control the creation of su
 
 To summarize, RIC isn't a standalone security feature, but one that compliments the attempts of app builders and security vendors to harden the integrity of web apps.
 
+### Confidentiality
+
+Since RIC isn't a standalone security feature, but one that focuses specifically on complimenting attempts of integrity hardening, it has no aspiration to address confidentiality.
+
+By focusing on hardening the integrity of the app against entities living within it, RIC by definition addresses security concerns that may occur within a single agent (process).
+
+Therefore, it does not allow apps to defend themselves against types of confidentiality attacks, such as side channeling (e.g. Meltdown and Spectre).
+
+That is fine - there's still value in providing apps with APIs to harden their level of integrity without addressing other security aspects.
+
+However, it is worth noting that indirectly, RIC can allow a hosting program to mitigate confidentiality risks between multiple entities running within it, by assisting it with limiting access to I/O APIs that enable timing measurements (e.g. `Date`, `performance`, etc).
+
+For scenarios where such practice comes in handy (e.g. [Cloudflare Workers](https://developers.cloudflare.com/workers/reference/security-model/#step-1-disallow-timers-and-multi-threading), [Agoric SES](https://github.com/endojs/endo/tree/master/packages/ses#multi-guest-compartment-isolation), etc), RIC could in fact amplify such tactic by helping the host apply such restriction to child same origin realms so that malicious entities living within the program won't be able to decrease the level of confidentiality of each other.
+
+That being said, while RIC can be useful for extending confidentiality mitigations, it does not include confidentiality within the scope of security aspects it attempts to assist with.
+
 ## Value
 
 While this feature is developers facing, the value it aspires to introduce is for the end users really, because until this proposal lands, the same origin concern prevents developers from building safe composable web applications within their own origin and instead place untrusted code within cross origin realms which affects the end user in 2 major ways:
