@@ -545,10 +545,6 @@ In the browser ecosystem, [realms](#Realm) are associated with an origin. For ex
 
 The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross-origin realm to realm B, and vice versa.
 
-## Support
-
-TODO
-
 ## Resources
 
 * Further reading on realms security - https://github.com/weizman/awesome-javascript-realms-security
