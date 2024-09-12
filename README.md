@@ -320,7 +320,7 @@ Since RIC isn't a standalone security feature, but one that focuses specifically
 
 By focusing on hardening the integrity of the app against entities living within it, RIC by definition addresses security concerns that may occur within a single agent (process).
 
-Therefore, it does not allow apps to defend themselves against types of confidentiality attacks, such as side channeling (e.g. Meltdown and Spectre).
+Therefore, it does not contribute to the apps' ability to defend themselves against the types of confidentiality attacks, such as side channeling (e.g. Meltdown and Spectre).
 
 That is fine - there's still value in providing apps with APIs to harden their level of integrity without addressing other security aspects.
 
