@@ -304,7 +304,7 @@ As described in this document, same origin realms are a power that can allow unt
 
 While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to create same origin realms (e.g. iframes, popups, etc), which is untamable.
 
-RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within them too.
+RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within these realms too.
 
 Therefore, in this context, apps using JavaScript runtime virtualization to introduce their own set of rules and restrictions can be thought of an act of preserving a high level of integrity.
 
