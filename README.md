@@ -390,7 +390,8 @@ Therefore it's important for implementations to get that part right, and for tes
 
 #### Escalation to Code Execution
 
-From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set power to full code execution, because if the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
+From the perspective of an attacker, this proposal can be thought of as a way to escalate the ability to modify the CSP directive to full code execution.
+If the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control the response headers, they can translate such capability to an effective XSS using this proposal, by setting a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
 
 This risk is mitigated to a satisfactory extent when taking some core properties of the proposal into account:
 
