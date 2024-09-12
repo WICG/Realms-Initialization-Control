@@ -302,7 +302,7 @@ Reading through the different sections of this proposal makes it clear RIC is a 
 
 As described in this document, same origin realms are a power that can allow untrusted code that's invited to run within the same context of a given web app to undermine the app's own set of rules and restrictions on its hosting envirnoment.
 
-While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to form same origin realms, which is untamable.
+While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to create same origin realms (e.g. iframes, popups, etc), which is untamable.
 
 RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within them too.
 
