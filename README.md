@@ -349,20 +349,12 @@ Therefore it's important for implementations to get that part right, and for tes
 
 From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set power to full code execution, because if the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
 
-In this proposal's current form, this in fact is more than just a security consideration, but perhaps an introduction of an unprecedented security concern, where being able to modify headers can result in XSS (which is possible today only via chaining such ability with other security issues in a vulnerable web app).
+This risk is mitigated to a satisfactory extent when taking some core properties of the proposal into account:
 
-In that context, it might be worth reflecting on possible alternatives and their pros and cons:
+* 1st party - the value provided via the RIC directive must point to the same origin as the hosting app, so that the resource being pulled in and executed can only be served from the servers of the app and cannot be pulled in from a 3rd party server an attacker controls
+* Content type - the resource must be served with the Content-Type header set to JavaScript so that even if the attacker manages to reflect some content they control via resources provided by the app's server, it won't be treated as executable code unless explicitly states so.
 
-1. CSP (via header) - introduce `init-realm` via a CSP header (current proposal's state)
-   * PRO - a capability preserved to the web app (which is the entity expected to be capable of controling such power)
-   * CON - if the web app mistakenly allows other entities to control headers, this feature can allow them to introduce XSS (unprecedented)
-2. CSP (via meta) - introduce `init-realm` via a meta tag
-   * PRO - Better than a header in the sense that transitioning from a headers' setting capability to XSS is unprecedented and quite an escalation, but if attackers need to be able to modify the initial HTML of the app to transition to XSS, that is (1) more unlikely and (2) less of an escalation (if they can inject HTML tags, they might as well inject a script or an iframe).
-   * CON - Even if mitigated, still potentially an escalation, for example if attacker can introduce HTML tags but is blocked from getting them to execute thanks to a strict `script-src` implementation, providing a meta tag with `init-realm` can help them escalate to XSS).
-3. API (via JavaScript) - instead of CSP, export a JavaScript API that registeres the script to run within all realms (e.g. `window.onRealmInit('/scripts/init-realm.js')`)
-   * PRO - This mitigates possibilities for escalations towards code execution, because in order to abuse this feature the attacker must have code execution abilities to begin with
-   * CON - Potentially allows all scripts in the page to register their own script (although probably not an issue for 1st party scripts, as long as order of registration is respected, but perhaps sensitive with 3rd party scripts?)
-   * NOTE - Perhaps in a similar manner to `navigator.serviceWorker.register`?
+The tradeoff here is that 3rd party scripts fall out of scope of the RIC proposal, but at the moment no way to have both was found, so in order for RIC to pose no potential security risk to the web space, setting of cross origin JavaScript remote resources must be forbidden.
 
 #### Integrity of Execution Order
 
