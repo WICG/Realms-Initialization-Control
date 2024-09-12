@@ -382,6 +382,16 @@ This already goes with how CSP is currently enforcing its rules canonically in t
 
 This section focuses on how should the new RIC CSP directive behave in integration with current properties of CSP.
 
+#### Meta HTML tag support
+
+When introducing new CSP directives, a question that must be asked is whether allowing its setting via the `<meta>` tag should be allowed or not.
+
+In context of the RIC directive, given the restrictions applied on 1st party and content type, setting the RIC directive in such manner is concluded to be safe and not introduce insecurity.
+
+Meaning, this feature will insert the `<meta>` tag into the list of HTML tags that can translate into code execution (as opposed to before), but given how such execution will necessarily be limited to 1st party resources that are explicitly declared to be of type JavaScript, the potential damage is decided to be mitigated to a satisfactory level.
+
+* Visit [Escalation to Code Execution](#escalation-to-code-execution) to learn more about the proposed limitations described above.
+
 #### Multiple CSP policies
 
 According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
