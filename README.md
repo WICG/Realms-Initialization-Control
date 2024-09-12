@@ -496,7 +496,7 @@ As far as we're aware, there are no CSP directives that can help with mitigating
 
 The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
 
-### [ShadowRealms](https://github.com/tc39/proposal-shadowrealm/)
+### ShadowRealms
 
 While both proposals address realms related concerns, the needs ShadowRealms and the RIC proposal answer are orthogonal.
 
@@ -522,11 +522,11 @@ Cross agent realms such as cross origin or sandboxed iframes suffer from the sam
 
 ### Document Policy
 
-TODO
+TBD
 
 ### Permissions Policy
 
-TODO
+TBD
 
 ## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
 
