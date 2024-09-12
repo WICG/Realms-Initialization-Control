@@ -39,21 +39,30 @@ document.body.appendChild(iframe);
 * [Proposal](#Proposal)
 * [Example](#Example)
 * [Use Cases](#Use-Cases)
-    * [Safe composability](#safe-composability-sandboxing--confinement)
+    * [Safe Composability](#safe-composability-sandboxing--confinement)
     * [Application Monitoring](#application-monitoring-security--errors--performance--ux)
+* [Security](#Security)
+   * [Integrity](#Integrity)
+   * [Confidentiality](#Confidentiality)
+   * [Availiability](#Availiability)
 * [Value](#Value)
     * [User Experience](#User-Experience)
     * [Improved Composability](#Improved-Composability)
-* [Discussion](#Discussion)
-    * [Feasibility and implementation](#Feasibility-and-implementation)
-    * [Canonicality](#Canonicality)
-    * [Multiple CSP policies](#Multiple-CSP-policies)
-* [Insufficient Alternatives](#Insufficient-Alternatives)
-    * [Headers](#headers)
-    * [CSP](#CSP)
 * [Considerations](#Considerations)
-    * [Privacy](#Privacy)
-    * [Security](#Security)
+   * [Privacy](#Privacy)
+   * [Security](#Security-1)
+   * [Feasibility](#Feasibility)
+   * [Canonicality](#Canonicality)
+   * [CSP Integration](#CSP-Integration)
+   * [Performance](#Performance)
+* [Insufficient Alternatives](#Insufficient-Alternatives)
+   * [Realms](#realms)
+   * [Headers](#headers)
+   * [CSP](#CSP)
+   * [ShadowRealms](#ShadowRealms)
+   * [Sandboxed / Cross Origin iframes and Workers](#Sandboxed--Cross-Origin-iframes-and-workers)
+   * [Document Policy](#Document-Policy)
+   * [Permissions Policy](#Permissions-Policy)
 * [Self-Review Questionnaire: Security and Privacy](#self-review-questionnaire-security-and-privacy)
 * [Terminology](#Terminology)
 * [Resources](#Resources)
@@ -183,7 +192,12 @@ Initialization of same origin realms in an application should be under that appl
 
 This proposal describes an opt-in capability to set a script to be loaded first, everytime a same origin realm with synchronous access to the main execution environment of the application is created.
 
-The location of the script can be relative or absolute. Secure connection is required.
+For it to be safe to use, some crucial properties/limitations must apply:
+
+* The location of the script can be relative or absolute, but must resolve to the same origin as the web app.
+* Secure connection is required.
+* The resource provided must explicitly state its ContentType as of JavaScript.
+
 The proposed method for setting the script is a Content Security Policy directive as follows:
 
 ```
@@ -242,7 +256,7 @@ newFetchInstance(`https://${server}/${path}/?payload=` + payload)
 
 Here are some use cases introduced by the community which led to the composition of this proposal.
 
-### Safe composability (sandboxing / confinement)
+### Safe Composability (sandboxing / confinement)
 
 The ability to safely embed untrusted code in a safe way is important for composability. Platforms can use it to allow their users as well as third party providers to enhance their provided functionality, and provide value to end users.
 
@@ -283,6 +297,50 @@ document.body.appendChild(document.createElement('iframe')).contentWindow.fetch(
 
 The conclusion is that not being able to enforce such services at a very specific time (earlier than all other scripts) to all same origin realms of the app (as opposed to its top most realm only), significantly narrows down the reach such services have, which attackers can abuse.
 
+## Security
+
+This section explores this proposal's impact on security from the perspective of the well known [CIA](https://agoric.com/blog/technology/a-taxonomy-of-security-issues) (Confidentiality,Integrity,Availability) security standard.
+
+### Integrity
+
+Reading through the different sections of this proposal makes it clear RIC is a security feature that aspires to support integrity specifically.
+
+As described in this document, same origin realms are a power that can allow untrusted code that's invited to run within the same context of a given web app to undermine the app's own set of rules and restrictions on its hosting envirnoment.
+
+While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to create same origin realms (e.g. iframes, popups, etc), which is untamable.
+
+RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within these realms too.
+
+Therefore, in this context, apps using JavaScript runtime virtualization to introduce their own set of rules and restrictions can be thought of as an act of preserving a high level of integrity.
+
+Since the power to create same origin realms undermine this goal, it by defenition lowers that level of integrity.
+
+Therefore, by providing a way to restore the power to control the creation of such realms to the app, RIC aspires to recover its integrity level.
+
+To summarize, RIC isn't a standalone security feature, but one that compliments the attempts of app builders and security vendors to harden the integrity of web apps.
+
+### Confidentiality
+
+Since RIC isn't a standalone security feature, but one that focuses specifically on complimenting attempts of integrity hardening, it has no aspiration to address confidentiality.
+
+By focusing on hardening the integrity of the app against entities living within it, RIC by definition addresses security concerns that may occur within a single agent (process).
+
+Therefore, it does not contribute to the apps' ability to defend themselves against the types of confidentiality attacks, such as side channeling (e.g. Meltdown and Spectre).
+
+In the context of this proposal, that's acceptable - there's still value in providing apps with APIs to harden their level of integrity without addressing other security aspects.
+
+However, it is worth noting that indirectly, RIC can allow a hosting program to mitigate confidentiality risks between multiple entities running within it, by assisting it with limiting access to I/O APIs that enable timing measurements (e.g. `Date`, `performance`, etc).
+
+For scenarios where such practice comes in handy (e.g. [Cloudflare Workers](https://developers.cloudflare.com/workers/reference/security-model/#step-1-disallow-timers-and-multi-threading), [Agoric SES](https://github.com/endojs/endo/tree/master/packages/ses#multi-guest-compartment-isolation), etc), RIC could in fact amplify such tactic by helping the host apply such restriction to child same origin realms so that malicious entities living within the program won't be able to decrease the level of confidentiality of each other.
+
+That being said, while RIC can be useful for extending confidentiality mitigations, it does not include confidentiality within the scope of security aspects it attempts to assist with.
+
+### Availiability
+
+Similarly to confidentiality, RIC isn't designed to address any availiability concerns, as it focuses on allowing apps to preserve their level of integrity against entities living within their own boundaries, which means such entities can DoS the app at any point given the fact they share the same agent (process).
+
+The rest of the arguments listed under the confidentiality section apply here just as well.
+
 ## Value
 
 While this feature is developers facing, the value it aspires to introduce is for the end users really, because until this proposal lands, the same origin concern prevents developers from building safe composable web applications within their own origin and instead place untrusted code within cross origin realms which affects the end user in 2 major ways:
@@ -304,63 +362,11 @@ Not only this will allow to do things apps do today better, but this will also a
 Not being able to secure the origin of the app against untrusted code really limits developers to inferior solutions that require making use of cross origin realms, which effectively limits how far the power of composability can really go.
 Allowing such untrusted code to run in the origin of the app can allow it for example to freely interact with the DOM of the app, which isn't possible when embedded in a cross origin document, and when combined with this proposal, such interaction can be mitigated by the hosting app in a finally secure way. Since this example can be easily extended to many other use cases, it might become clear how such a proposal can unlock new power for web apps in the realm of secure composability and embedding of untrusted code.
 
-## Discussion
-
-### Feasibility and implementation
-
-The proposed mechanism mostly relies on functionality already present elsewhere in the browser.
-
-* Running the pre-defined script on each realm initialization already exists in browser extensions as `"run_at": "document_start"` for content scripts.
-* Setting the script is being done via CSP, which is an excellent mechanism for canonically enforcing rules to a certain origin.
-* Supplying a script path the browser would remember across page loads exists in service worker implementation.
-
-### Canonicality
-
-The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
-
-Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
-
-This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
-
-### Multiple CSP policies
-
-According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
-
-Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
-
-So:
-```
-Content-Security-Policy: realm-init /x.js
-Content-Security-Policy: realm-init /y.js
-```
-
-Will fuse into:
-
-```
-Content-Security-Policy: realm-init /x.js /y.js
-```
-
-And will execute the scripts in that order.
-
-## Insufficient Alternatives
-
-Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
-
-### Headers
-
-As far as we're aware, there are no headers that can help with mitigating the same origin concern.
-
-* `X-frames` - This header is insufficient to address the problem because it doesn't allow to tame the environments of same origin realms, but only to prevent all same origin realms from loading within the page. Additionally, only remotely loaded resources obey this header, meaning same origin realms such as `iframe[src="about:blank"]` won't.
-
-### CSP
-
-As far as we're aware, there are no CSP directives that can help with mitigating the same origin concern.
-
-The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
-
 ## Considerations
 
-This section focuses on providing important notes to consider in aspects of privacy and security, which should be later on taken into account when integrating this proposal into the relevant specs, as well as when implementing by browsers vendors.
+This section focuses on details that were brought into consideration, as well as conclusions on how to address them.
+
+While important for achieving design that's both good and acceptable by stake holders, these considerations are also expected to be later on refered to and integrated into relevant specs and browsers' implementations (Security and Privacy especially).
 
 ### Privacy
 
@@ -384,28 +390,143 @@ Therefore it's important for implementations to get that part right, and for tes
 
 #### Escalation to Code Execution
 
-From the perspective of an attacker, this proposal can also be thought of as a way to escalate a CSP directive set power to full code execution, because if the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control parts of the response's headers, they can translate such capability to an effective XSS using this proposal, by simply configuring a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
+From the perspective of an attacker, this proposal can be thought of as a way to escalate the ability to modify the CSP directive to full code execution.
+If the attacker doesn't find a way to introduce an XSS to the web app, but can somehow control the response headers, they can translate such capability to an effective XSS using this proposal, by setting a CSP header with the proposed `init-realm` directive pointing to a remote script they control.
 
-In this proposal's current form, this in fact is more than just a security consideration, but perhaps an introduction of an unprecedented security concern, where being able to modify headers can result in XSS (which is possible today only via chaining such ability with other security issues in a vulnerable web app).
+This risk is mitigated to a satisfactory extent when taking some core properties of the proposal into account:
 
-In that context, it might be worth reflecting possible alternatives and their pros and cons:
+* 1st party - the value provided via the RIC directive must point to the same origin as the hosting app, so that the resource being pulled in and executed can only be served from the servers of the app and cannot be pulled in from a 3rd party server an attacker controls
+* Content type - the resource must be served with the Content-Type header set to JavaScript so that even if the attacker manages to reflect some content they control via resources provided by the app's server, it won't be treated as executable code unless explicitly states so.
 
-1. CSP (via header) - introduce `init-realm` via a CSP header (current proposal's state)
-   * PRO - a capability preserved to the web app (which is the entity expected to be capable of controling such power)
-   * CON - if the web app mistakenly allows other entities to control headers, this feature can allow them to introduce XSS (unprecedented)
-2. CSP (via meta) - introduce `init-realm` via a meta tag
-   * PRO - Better than a header in the sense that transitioning from a headers' setting capability to XSS is unprecedented and quite an escalation, but if attackers need to be able to modify the initial HTML of the app to transition to XSS, that is (1) more unlikely and (2) less of an escalation (if they can inject HTML tags, they might as well inject a script or an iframe).
-   * CON - Even if mitigated, still potentially an escalation, for example if attacker can introduce HTML tags but is blocked from getting them to execute thanks to a strict `script-src` implementation, providing a meta tag with `init-realm` can help them escalate to XSS).
-3. API (via JavaScript) - instead of CSP, export a JavaScript API that registeres the script to run within all realms (e.g. `window.onRealmInit('/scripts/init-realm.js')`)
-   * PRO - This mitigates possibilities for escalations towards code execution, because in order to abuse this feature the attacker must have code execution abilities to begin with
-   * CON - Potentially allows all scripts in the page to register their own script (although probably not an issue for 1st party scripts, as long as order of registration is respected, but perhaps sensitive with 3rd party scripts?)
-   * NOTE - Perhaps in a similar manner to `navigator.serviceWorker.register`?
+The tradeoff here is that 3rd party scripts fall out of scope of the RIC proposal, but at the moment no way to have both was found, so in order for RIC to pose no potential security risk to the web space, setting of cross origin JavaScript remote resources must be forbidden.
 
 #### Integrity of Execution Order
 
 When implementing this proposal, it is crucial to correctly instruct the browser to make sure the script provided via the `init-realm` CSP directive is the first JavaScript code to run within the realm, as in before any scripts dictated to run by its associated document (and to repeat that to all nested same origin realms).
 
 Otherwise, a malicious entity can find a way to introduce their own JavaScript code to run before the `init-realm` script, which would count as a complete bypass of this feature effectively which would miss the goal entirely.
+
+### Feasibility
+
+The proposed mechanism mostly relies on functionality already present elsewhere in the browser.
+
+* Running the pre-defined script on each realm initialization already exists in browser extensions as `"run_at": "document_start"` for content scripts.
+* Setting the script is being done via CSP, which is an excellent mechanism for canonically enforcing rules to a certain origin.
+* Supplying a script path the browser would remember across page loads exists in service worker implementation.
+
+### Canonicality
+
+The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
+
+Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
+
+This already goes with how CSP is currently enforcing its rules canonically in the lifetime of a webpage. 
+
+### CSP Integration
+
+This section focuses on how should the new RIC CSP directive behave in integration with current properties of CSP.
+
+#### Meta HTML tag support
+
+When introducing new CSP directives, a question that must be asked is whether allowing its setting via the `<meta>` tag should be allowed or not.
+
+In context of the RIC directive, given the restrictions applied on 1st party and content type, setting the RIC directive in such manner is concluded to be safe and not introduce insecurity.
+
+Meaning, this feature will insert the `<meta>` tag into the list of HTML tags that can translate into code execution (as opposed to before), but given how such execution will necessarily be limited to 1st party resources that are explicitly declared to be of type JavaScript, the potential damage is decided to be mitigated to a satisfactory level.
+
+* Visit [Escalation to Code Execution](#escalation-to-code-execution) to learn more about the proposed limitations described above.
+
+#### Multiple CSP policies
+
+According to the [W3C CSP spec (enforcing-multiple-policies)](https://www.w3.org/TR/CSP2/#enforcing-multiple-policies), the browser must have a consistent mechanizm for handling multiple CSPs (e.g. 2 setting headers).
+
+Regarding this proposal, since the proposed directive is designed to support an unlimited amount of remote script resources to be loaded chronologically, the natural way to address this would be to accumulate resources into a chronological list.
+
+So:
+```
+Content-Security-Policy: realm-init /x.js
+Content-Security-Policy: realm-init /y.js
+```
+
+Will fuse into:
+
+```
+Content-Security-Policy: realm-init /x.js /y.js
+```
+
+And will execute the scripts in that order.
+
+### Performance
+
+Naturally, the RIC proposal will introduce a performance impact, but that is somewhat by design if you want to control the creation phase of same origin realms within your app (to which you are not obligated to opt-in to).
+
+The current alternative is that web apps that wish to address this issue integrate [snow](https://github.com/lavamoat/snow)-like solutions that solve this problem using JS, which is necessarily inferior to a built-in solution such as the proposed RIC.
+
+Those who need this will see a perf improvement, migrating from a user-land solution to a native-based one.
+Those who find this to not be worth it these days, will either continue to think so or perhaps change their minds given how RIC will be faster than current user-land alternatives.
+
+This is a security feature, in which running first is crucial, thus the introduction of a perf-impact to this (opt-in) feature is pretty natural - there's no other way to do this really.
+
+To mitigate the necessary performance hit, implementers are expected to fetch the RIC resource when is introduced at the headers parsing stage in parallel to other stages, but only until reaching the DOM parsing stage which must be delayed until the RIC resource is both fetched and loaded (executed) to completion.
+
+## Insufficient Alternatives
+
+Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
+
+### Realms
+
+Since the RIC proposal focuses on enabling integration of untrusted code into web apps at runtime, it's oftenly confused with realms-based alternatives, as in taking such code and confining it within a separate realm to achieve desired integration safely.
+
+> _Why RIC? Why not just confine untrusted code within another realm?_
+
+While true, such practice is only applicable to use cases of a very specific nature, in which such untrusted code can be migrated into a separate realm for confinement purposes, but when dealing with untrusted code that must be executed within the main realm of the app, realms-based solutions don't provide any value whatsoever.
+
+* Visit [Use Cases](#use-cases) to learn more about brands of untrusted code that's expected to be loaded within the same realm as the app.
+* Visit [ShadowRealms](#ShadowRealms) to learn more about why realms-based alternatives don't provide enough value for untrusted code of such nature.
+
+### Headers
+
+As far as we're aware, there are no headers that can help with mitigating the same origin concern.
+
+* `X-frames` - This header is insufficient to address the problem because it doesn't allow to tame the environments of same origin realms, but only to prevent all same origin realms from loading within the page. Additionally, only remotely loaded resources obey this header, meaning same origin realms such as `iframe[src="about:blank"]` won't.
+
+### CSP
+
+As far as we're aware, there are no CSP directives that can help with mitigating the same origin concern.
+
+The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
+
+### ShadowRealms
+
+While both proposals address realms related concerns, the needs ShadowRealms and the RIC proposal answer are orthogonal.
+
+According to the proposal, a ShadowRealm won't be considered a security feature due to how its design leaves it somewhat vulnerable to both [availability](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-availability-protection) and [confidentiality](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-confidentiality-protection) security aspects.
+
+That being said, it also claims that when focusing on the [integrity](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#-integrity) aspect of security, a ShadowRealm can be very useful given how it'll hermetically confine any evaluated code within it from escaping to the hosting realm in any way, thus unable to modify its environment and therefore remains incapable of lowering its level of integrity.
+
+This means that using ShadowRealms to host untrusted code will be quite useful for when it can be evaluated within a new type of inescapable same origin realm to preserve the integrity of the hosting environment.
+
+While this can potentially answer many important [use cases](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#use-cases), this means ShadowRealm is irrelevant for preserving the integrity of the hosting environment against untrusted code that requires to run in the same context as the hosting environment.
+
+Meaning, code we don't trust that must run in the top realm of the app cannot be moved and confined within a different realm, even if it shares an agent (including a ShadowRealm), thus leaving the current state of the web defensless in terms of integrity against untrusted code of such nature.
+
+This is the aspect the RIC proposal aims to address that no other web feature currently does.
+
+The two proposals overlap in their will to introduce better ways to preserve the integrity of programs, the difference is that ShadowRealm provides this by running code that might harm the integrity away from the hosting environment, while RIC allows to tame the capabilities provided by the host environment for code that must share space with the hosting realm (visit [use cases](https://github.com/WICG/Realms-Initialization-Control#Use-Cases) for examples).
+
+The so called "taming of capabilities" must extend beyond the main realm environment onto legacy same origin realms (such as iframes and popups) due to the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf), which is the most significant part the RIC proposal aims to solve that no other existing web feature does.
+
+### Sandboxed / Cross Origin iframes and Workers
+
+Cross agent realms such as cross origin or sandboxed iframes suffer from the same problem described under the [Realms](#Realms) section, where they're only useful for code that can be moved over into another realm to be confined there, which doesn't apply to many other use cases where other brands of untrusted code must be integrated and executed in the same realm space as the app's (as described under [Realms](#Realms)).
+
+### Document Policy
+
+TBD
+
+### Permissions Policy
+
+TBD
 
 ## [Self-Review Questionnaire: Security and Privacy](https://w3ctag.github.io/security-questionnaire/)
 
