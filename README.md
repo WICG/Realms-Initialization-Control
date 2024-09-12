@@ -306,7 +306,7 @@ While such rules and restrictions are applicable via JavaScript runtime virtuali
 
 RIC aspires to provide web apps the power to tame it, by allowing them to execute their code within such realms before any other hosted code, so that they can apply their rules and restrictions within these realms too.
 
-Therefore, in this context, apps using JavaScript runtime virtualization to introduce their own set of rules and restrictions can be thought of an act of preserving a high level of integrity.
+Therefore, in this context, apps using JavaScript runtime virtualization to introduce their own set of rules and restrictions can be thought of as an act of preserving a high level of integrity.
 
 Since the power to create same origin realms undermine this goal, it by defenition lowers that level of integrity.
 
