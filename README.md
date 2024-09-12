@@ -474,7 +474,7 @@ The so called "taming of capabilities" must extend beyond the main realm environ
 
 ### Sandboxed / Cross Origin iframes and Workers
 
-TODO
+Cross agent realms such as cross origin or sandboxed iframes suffer from the same problem described under the [Realms](#Realms) section, where they're only useful for code that can be moved over into another realm to be confined there, which doesn't apply to many other use cases where other brands of untrusted code must be integrated and executed in the same realm space as the app's (as described under [Realms](#Realms)).
 
 ### Document Policy
 
