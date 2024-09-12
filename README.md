@@ -346,7 +346,7 @@ From the perspective of an attacker, this proposal can also be thought of as a w
 
 In this proposal's current form, this in fact is more than just a security consideration, but perhaps an introduction of an unprecedented security concern, where being able to modify headers can result in XSS (which is possible today only via chaining such ability with other security issues in a vulnerable web app).
 
-In that context, it might be worth reflecting possible alternatives and their pros and cons:
+In that context, it might be worth reflecting on possible alternatives and their pros and cons:
 
 1. CSP (via header) - introduce `init-realm` via a CSP header (current proposal's state)
    * PRO - a capability preserved to the web app (which is the entity expected to be capable of controling such power)
