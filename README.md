@@ -300,7 +300,7 @@ This section explores this proposal's impact on security from the perspective of
 
 Reading through the different sections of this proposal makes it clear RIC is a security feature that aspires to support integrity specifically.
 
-As described in this document, same origin realms are a power that can allow untrusted code that's invited to run within the same context of a given web app to undermine its will to apply its own set of rules and restrictions on its hosting envirnoment.
+As described in this document, same origin realms are a power that can allow untrusted code that's invited to run within the same context of a given web app to undermine the app's own set of rules and restrictions on its hosting envirnoment.
 
 While such rules and restrictions are applicable via JavaScript runtime virtualization, that statement does not hold against the power to form same origin realms, which is untamable.
 
