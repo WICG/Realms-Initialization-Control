@@ -433,7 +433,7 @@ The only directives that revolve around realms security issues are `iframe` rela
 
 ### [ShadowRealms](https://github.com/tc39/proposal-shadowrealm/)
 
-While both proposals address realms related concerns, the needs ShadowRealms and the RIC proposal answer are almost completely non-overlapping.
+While both proposals address realms related concerns, the needs ShadowRealms and the RIC proposal answer are orthogonal.
 
 According to the proposal, a ShadowRealm won't be considered a security feature due to how its design leaves it somewhat vulnerable to both [availability](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-availability-protection) and [confidentiality](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-confidentiality-protection) security aspects.
 
