@@ -316,7 +316,7 @@ Allowing such untrusted code to run in the origin of the app can allow it for ex
 
 ## Considerations
 
-This section focuses on important details that were brought into consideration, as well as conclusions on how to address them.
+This section focuses on details that were brought into consideration, as well as conclusions on how to address them.
 
 While important for achieving design that's both good and acceptable by stake holders, these considerations are also expected to be later on refered to and integrated into relevant specs and browsers' implementations (Security and Privacy especially).
 
