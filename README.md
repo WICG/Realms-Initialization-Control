@@ -431,7 +431,14 @@ Here are listed some existing security features/controls/APIs that were consider
 
 ### Realms
 
-TODO
+Since the RIC proposal focuses on enabling integration of untrusted code into web apps at runtime, it's oftenly confused with realms-based alternatives, as in taking such code and confining it within a separate realm to achieve desired integration safely.
+
+> _Why RIC? Why not just confine untrusted code within another realm?_
+
+While true, such practice is only applicable to use cases of a very specific nature, in which such untrusted code can be migrated into a separate realm for confinement purposes, but when dealing with untrusted code that must be executed within the main realm of the app, realms-based solutions don't provide any value whatsoever.
+
+* Visit [Use Cases](#use-cases) to learn more about brands of untrusted code that's expected to be loaded within the same realm as the app.
+* Visit [ShadowRealms](#ShadowRealms) to learn more about why realms-based alternatives don't provide enough value for untrusted code of such nature.
 
 ### Headers
 
@@ -445,9 +452,25 @@ As far as we're aware, there are no CSP directives that can help with mitigating
 
 The only directives that revolve around realms security issues are `iframe` related such as the `frame-src` which suffers from the exact same problems as the `X-frames` header listed above.
 
-### ShadowRealms
+### [ShadowRealms](https://github.com/tc39/proposal-shadowrealm/)
 
-TODO
+While both proposals address realms related concerns, the needs ShadowRealms and the RIC proposal answer are orthogonal.
+
+According to the proposal, a ShadowRealm won't be considered a security feature due to how its design leaves it somewhat vulnerable to both [availability](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-availability-protection) and [confidentiality](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#%EF%B8%8F-confidentiality-protection) security aspects.
+
+That being said, it also claims that when focusing on the [integrity](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#-integrity) aspect of security, a ShadowRealm can be very useful given how it'll hermetically confine any evaluated code within it from escaping to the hosting realm in any way, thus unable to modify its environment and therefore remains incapable of lowering its level of integrity.
+
+This means that using ShadowRealms to host untrusted code will be quite useful for when it can be evaluated within a new type of inescapable same origin realm to preserve the integrity of the hosting environment.
+
+While this can potentially answer many important [use cases](https://github.com/tc39/proposal-shadowrealm/blob/main/explainer.md#use-cases), this means ShadowRealm is irrelevant for preserving the integrity of the hosting environment against untrusted code that requires to run in the same context as the hosting environment.
+
+Meaning, code we don't trust that must run in the top realm of the app cannot be moved and confined within a different realm, even if it shares an agent (including a ShadowRealm), thus leaving the current state of the web defensless in terms of integrity against untrusted code of such nature.
+
+This is the aspect the RIC proposal aims to address that no other web feature currently does.
+
+The two proposals overlap in their will to introduce better ways to preserve the integrity of programs, the difference is that ShadowRealm provides this by running code that might harm the integrity away from the hosting environment, while RIC allows to tame the capabilities provided by the host environment for code that must share space with the hosting realm (visit [use cases](https://github.com/WICG/Realms-Initialization-Control#Use-Cases) for examples).
+
+The so called "taming of capabilities" must extend beyond the main realm environment onto legacy same origin realms (such as iframes and popups) due to the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf), which is the most significant part the RIC proposal aims to solve that no other existing web feature does.
 
 ### Sandboxed / Cross Origin iframes and Workers
 
