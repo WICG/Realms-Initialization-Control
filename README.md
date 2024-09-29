@@ -81,7 +81,7 @@ While software providing various runtime protections focused on addressing this 
 This lack of control is also referred to as the [same origin concern](https://weizmangal.com/content/pdf/The%20same%20origin%20concern.pdf) which is what this proposal focuses on addressing.
 It refers to how [same origin realms](#Same-Origin-Realm) leak powerful [capabilities](#Capabilities) to unauthorized entities at runtime in a fundamentally uncontrollable way.  
 
-Introducing a new CSP directive that sets a script to run at the start of each new realm in the application's origin would solve this by allowing web applications to capture same origin realms when initialized to customize them into mitigating the risk they expose the app to.
+Introducing a new CSP directive that sets a script to run at the start of each new realm in the application's origin (as well as at its top) would solve this by allowing web applications to capture same origin realms when initialized to customize them into mitigating the risk they expose the app to.
 
 ## Motivation
 
@@ -181,7 +181,7 @@ Other downsides such as performance, compatibility and continuous resilience of 
 
 ## Goals
 
-* Give web applications control over all realms that fall under their origin - regardless of the APIs used to create the new realm and edge-cases like `about:blank`.
+* Give web applications control over all realms that fall under their origin (as well as the top realm) - regardless of the APIs used to create the new realm and edge-cases like `about:blank`.
 * Make the control opt-in to avoid breaking the web.
 
 The browser is already capable of enforcing rules on new realms before they become reachable, and it is where the same origin concern should also be addressed.
@@ -190,7 +190,7 @@ The browser is already capable of enforcing rules on new realms before they beco
 
 Initialization of same origin realms in an application should be under that application's control.
 
-This proposal describes an opt-in capability to set a script to be loaded first, everytime a same origin realm with synchronous access to the main execution environment of the application is created.
+This proposal describes an opt-in capability to set a script to be loaded first for both the main execution environment of the application (aka top) and every other same origin realm with synchronous access to it when is created.
 
 For it to be safe to use, some crucial properties/limitations must apply:
 
@@ -416,7 +416,7 @@ The proposed mechanism mostly relies on functionality already present elsewhere 
 
 ### Canonicality
 
-The browser will load the script defined by the new CSP directive of the top main realm for each new child realm.
+The browser will load the script defined by the new CSP directive of the top main realm for each new child realm (as well as for the top realm itself).
 
 Meaning, the top main realm is the only realm in a webpage with the power to set the new CSP directive, and it must trickle down to child realms from the same origin, as they don't have the power to set this directive.
 
