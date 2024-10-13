@@ -469,6 +469,15 @@ This is a security feature, in which running first is crucial, thus the introduc
 
 To mitigate the necessary performance hit, implementers are expected to fetch the RIC resource when is introduced at the headers parsing stage in parallel to other stages, but only until reaching the DOM parsing stage which must be delayed until the RIC resource is both fetched and loaded (executed) to completion.
 
+### Redirection
+
+It would be best if headers that suggest a redirection would be stripped away from the RIC resource response, so that open redirection couldn't be abused by attackers that can't control the RIC resource but can somehow add/modify headers of it.
+Whether attackers managed to introduce such headers, or the builders mistakenly redirected the RIC resource to a cross origin, the browser can easily help avoid potential damage by not allowing such an action to take place in the first place.
+
+If this is found to be too stricted, allowing redirection to same origin resources only can be considered, although when combined with a file drop vulnerability can be just as dangerous.
+
+> potential reference - https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
+
 ## Insufficient Alternatives
 
 Here are listed some existing security features/controls/APIs that were considered and found insufficient for addressing the issue the RIC proposal attempts to address:
