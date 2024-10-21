@@ -471,7 +471,7 @@ To mitigate the necessary performance hit, implementers are expected to fetch th
 
 ### Redirection
 
-It would be best if headers that suggest a redirection would be stripped away from the RIC resource response, so that open redirection couldn't be abused by attackers that can't control the RIC resource but can somehow add/modify headers of it.
+It would be best if RIC resources with headers that suggest a redirection would be rejected by the browser and treated to be invalid, so that open redirection couldn't be abused by attackers that can't control the RIC resource but can somehow add/modify headers of it.
 Whether attackers managed to introduce such headers, or the builders mistakenly redirected the RIC resource to a cross origin, the browser can easily help avoid potential damage by not allowing such an action to take place in the first place.
 
 If this is found to be too stricted, allowing redirection to same origin resources only can be considered, although when combined with a file drop vulnerability can be just as dangerous.
